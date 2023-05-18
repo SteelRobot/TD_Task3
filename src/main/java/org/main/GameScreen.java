@@ -17,7 +17,6 @@ public class GameScreen extends JPanel {
     public GameScreen(Game game) {
         this.game = game;
 
-
         setPanelSize();
 
     }
@@ -30,16 +29,15 @@ public class GameScreen extends JPanel {
         addMouseMotionListener(myMouseListener);
         addKeyListener(keyboardListener);
 
-        requestFocus();
+        requestFocusInWindow();
     }
 
     private void setPanelSize() {
-        size = new Dimension(640, 740);
+        size = new Dimension(640, 800);
         setMinimumSize(size);
         setMaximumSize(size);
         setPreferredSize(size);
-
-
+        //Нужны для создания окна и сохранения его размера
     }
 
 
@@ -48,7 +46,5 @@ public class GameScreen extends JPanel {
 
         game.getRender().render(g);
     }
-
-
 }
 

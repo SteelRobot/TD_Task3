@@ -2,12 +2,16 @@ package org.scenes;
 
 import org.helpers.LoadSave;
 import org.main.Game;
+import org.objects.PathPoint;
 import org.objects.Tile;
 import org.ui.ToolBar;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import static org.helpers.Constants.Temp.lvlName;
+import static org.helpers.Constants.Tiles.*;
 
 public class Editing extends GameScene implements SceneMethods {
 
@@ -15,17 +19,25 @@ public class Editing extends GameScene implements SceneMethods {
     private Tile selectedTile;
     private int mouseX, mouseY, lastTileX, lastTileY, lastTileId;
     private boolean drawSelect = false;
+    private PathPoint start, end;
 
     private ToolBar toolBar;
 
     public Editing(Game game) {
         super(game);
         loadDefaultLevel();
-        toolBar = new ToolBar(0, 640, 640, 100, this);
+        toolBar = new ToolBar(0, 640, 640, 160, this);
     }
 
     private void loadDefaultLevel() {
-        lvl = LoadSave.GetLevelData("New Level");
+        lvl = LoadSave.GetLevelData(lvlName);
+        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints(lvlName);
+        start = points.get(0);
+        end = points.get(1);
+    }
+
+    public void update() {
+        updateTick();
     }
 
     @Override
@@ -33,29 +45,43 @@ public class Editing extends GameScene implements SceneMethods {
         drawLevel(g);
         toolBar.draw(g);
         drawSelectedTile(g);
+        drawPathPoints(g);
+    }
+
+    private void drawPathPoints(Graphics g) {
+        //Рисует клетку появления врагов и базу
+        if (start != null) {
+            g.drawImage(toolBar.getPathStartImg(), start.getxCord() * 32, start.getyCord() * 32, null);
+        }
+        if (end != null) {
+            g.drawImage(toolBar.getPathEndImg(), end.getxCord() * 32, end.getyCord() * 32, null);
+        }
     }
 
     private void drawLevel(Graphics g) {
+        //Рисует уровень в зависимости от id клетки в сохранённом файле
         for (int y = 0; y < lvl.length; y++) {
             for (int x = 0; x < lvl[y].length; x++) {
                 int id = lvl[y][x];
-                g.drawImage(getSprite(id), x * 32, y * 32, null);
+                if (isAnimation(id)) {
+                    g.drawImage(getSprite(id, animationIndex), x * 32, y * 32, null);
+                } else {
+                    g.drawImage(getSprite(id), x * 32, y * 32, null);
+                }
             }
         }
     }
 
-    private BufferedImage getSprite(int spriteID) {
-        return getGame().getTileManager().getSprite(spriteID);
-    }
-
     private void drawSelectedTile(Graphics g) {
+        //Рисует выбранную клетку на самом поле, но убирает её при перемещении курсора
         if (selectedTile != null && drawSelect) {
             g.drawImage(selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);
         }
     }
 
     public void saveLevel() {
-        LoadSave.SaveLevel("New Level", lvl);
+        //При нажатии кнопки сохранения уровень сохраняется
+        LoadSave.SaveLevel(lvlName, lvl, start, end);
         getGame().getPlaying().setLevel(lvl);
     }
 
@@ -65,17 +91,29 @@ public class Editing extends GameScene implements SceneMethods {
     }
 
     private void changeTile(int x, int y) {
+        //Ставит выбранную клетку на поле уровня
         if (selectedTile != null) {
             int tileX = x / 32;
             int tileY = y / 32;
-            if (lastTileX == tileX && lastTileY == tileY
-                    && lastTileId == selectedTile.getId()) return;
+            if (selectedTile.getId() >= 0) {
 
-            lastTileX = tileX;
-            lastTileY = tileY;
-            lastTileId = selectedTile.getId();
+                if (lastTileX == tileX && lastTileY == tileY
+                        && lastTileId == selectedTile.getId()) return;
 
-            lvl[tileY][tileX] = selectedTile.getId();
+                lastTileX = tileX;
+                lastTileY = tileY;
+                lastTileId = selectedTile.getId();
+
+                lvl[tileY][tileX] = selectedTile.getId();
+            } else {
+                int id = lvl[tileY][tileX];
+                if (getGame().getTileManager().getTile(id).getTileType() == ROAD_TILE) {
+                    if (selectedTile.getId() == -1) {
+                        start = new PathPoint(tileX, tileY);
+                    } else
+                        end = new PathPoint(tileX, tileY);
+                }
+            }
         }
     }
 
@@ -113,9 +151,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mouseDragged(int x, int y) {
-        if (y >= 640) {
-
-        } else {
+        if (y < 640) {
             changeTile(x, y);
         }
     }

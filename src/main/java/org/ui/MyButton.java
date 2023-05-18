@@ -3,6 +3,7 @@ package org.ui;
 import java.awt.*;
 
 public class MyButton {
+    //Классные кнопки
 
     public int x, y, width, height, id;
     private String text;
@@ -10,8 +11,8 @@ public class MyButton {
     private Boolean mouseOver = false;
     private Boolean mousePressed = false;
 
-    //Нормальные кнопки
     public MyButton(String text, int x, int y, int width, int height) {
+        //Нормальные кнопки
 
         this.text = text;
         this.x = x;
@@ -22,8 +23,9 @@ public class MyButton {
 
         initBounds();
     }
-    //Кнопки плиток
+
     public MyButton(String text, int x, int y, int width, int height, int id) {
+        //Кнопки плиток и башен
 
         this.text = text;
         this.x = x;

@@ -2,7 +2,6 @@ package org.main;
 
 import org.helpers.LoadSave;
 import org.managers.TileManager;
-import org.objects.Tile;
 import org.scenes.Editing;
 import org.scenes.Menu;
 import org.scenes.Playing;
@@ -10,12 +9,11 @@ import org.scenes.Settings;
 
 import javax.swing.*;
 
+import static org.helpers.Constants.Temp.lvlName;
+
 public class Game extends JFrame implements Runnable {
 
     private GameScreen gameScreen;
-
-    private int updates;
-    private long lastTimeUPS;
     private Thread gameThread;
 
     private final double FPS_SET = 120.0;
@@ -31,9 +29,10 @@ public class Game extends JFrame implements Runnable {
     private TileManager tileManager;
 
     public Game() {
-        initClasses();
+        //Создание уровня
         createDefaultLevel();
-
+        initClasses();
+        //Создание самого окна
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         render = new Render(this);
         gameScreen = new GameScreen(this);
@@ -42,7 +41,6 @@ public class Game extends JFrame implements Runnable {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
     private void initClasses() {
@@ -56,11 +54,12 @@ public class Game extends JFrame implements Runnable {
     }
 
     private void createDefaultLevel() {
+        //Класс, состоящий только из травы
         int[] arr = new int[400];
         for (int i = 0; i < arr.length; i++)
             arr[i] = 0;
 
-        LoadSave.CreateLevel("New Level", arr);
+        LoadSave.CreateLevel(lvlName, arr);
     }
 
     private void start() {
@@ -71,11 +70,16 @@ public class Game extends JFrame implements Runnable {
 
 
     private void updateGame() {
-
+        //Для обновления важных данных
+        switch(GameStates.gameState) {
+            case PLAYING -> playing.update();
+            case MENU -> {}
+            case SETTINGS -> {}
+            case EDIT -> editing.update();
+        }
     }
 
     public static void main(String[] args) {
-
         Game game = new Game();
         game.gameScreen.initInputs();
         game.start();
@@ -83,7 +87,6 @@ public class Game extends JFrame implements Runnable {
 
     @Override
     public void run() {
-
         double timePerFrame = 1000000000.0 / FPS_SET;
         double timePerUpdate = 1000000000.0 / UPS_SET;
 
@@ -116,12 +119,8 @@ public class Game extends JFrame implements Runnable {
                 lastTimeCheck = System.currentTimeMillis();
             }
         }
-        //Update
-
-        //Checking FPS and UPS
     }
 
-    //Getters and Setter
     public Render getRender() {
         return render;
     }
