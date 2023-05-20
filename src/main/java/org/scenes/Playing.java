@@ -272,4 +272,5 @@ public class Playing extends GameScene implements SceneMethods {
     }
 
     public boolean isGamePaused() {return gamePaused;}
+    public ActionBar getActionBar() {return actionBar;}
 }

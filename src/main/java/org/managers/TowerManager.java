@@ -30,7 +30,7 @@ public class TowerManager {
     }
 
     public void addTower(Tower selectedTower, int xPos, int yPos) {
-        towers.add(new Tower(xPos, yPos, towerAmount++, selectedTower.getTowerType()));
+        towers.add(new Tower(xPos, yPos, towerAmount++, selectedTower.getTowerType(), false));
     }
 
     public void removeTower(Tower displayedTower) {
@@ -75,9 +75,12 @@ public class TowerManager {
     }
 
     public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
         for (Tower t : towers) {
-            g.drawImage(towerImgs[t.getTowerType()], t.getX(), t.getY(), null);
+            if (t.getSide()) {
+                //Для отзеркаливания спрайта по вертикали
+                g.drawImage(towerImgs[t.getTowerType()], t.getX() + 32, t.getY(), -32, 32, null);
+            }
+            else g.drawImage(towerImgs[t.getTowerType()], t.getX(), t.getY(), null);
         }
     }
 

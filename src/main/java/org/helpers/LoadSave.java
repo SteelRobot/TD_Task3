@@ -24,16 +24,19 @@ public class LoadSave {
 
         return img;
     }
+    public static BufferedImage getFlagImage(String name) {
+        // Достаёт из папки resources флаги
+        BufferedImage img = null;
+        InputStream is = LoadSave.class.getClassLoader().getResourceAsStream(name);
+        try {
+            img = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-//    public static void CreateFile() {
-//
-//        File txtFile = new File("src/main/resources/testTextFile.txt");
-//        try {
-//            txtFile.createNewFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+        return img;
+    }
+
 
     public static void CreateLevel(String name, int[] idArr) {
         //Создаёт новый уровень с названием. Если уже существует, то ничего не делает

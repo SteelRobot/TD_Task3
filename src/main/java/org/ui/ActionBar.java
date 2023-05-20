@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 
 import static org.main.GameStates.MENU;
 import static org.main.GameStates.SetGameState;
+import static org.main.LangStates.langState;
 
 public class ActionBar extends Bar {
     private MyButton bMenu;
@@ -28,6 +29,8 @@ public class ActionBar extends Bar {
 
     private boolean showTowerCost;
     private int towerCostType;
+    private String bMenuStr, bPauseStr, bUnpauseStr, bSellStr, bUpgradeStr, pauseStr, noMoneyStr, costStr,
+            moneyCountStr, waveStr, enemyCountStr, timeCounterStr, currencyStr, upgradeLevelStr;
 
 
     public ActionBar(int x, int y, int width, int height, Playing playing) {
@@ -35,14 +38,52 @@ public class ActionBar extends Bar {
         this.playing = playing;
         formatter = new DecimalFormat("0.0");
         initButtons();
+        setLangTexts();
 
         selectedTowerBorder = getSelectedTowerBorder();
     }
 
+    public void setLangTexts() {
+        switch (langState) {
+            case RUSSIAN -> {
+                bMenuStr = "Меню";
+                bPauseStr = "Пауза";
+                bUnpauseStr = "Продолжить";
+                bSellStr = "Продать";
+                bUpgradeStr = "Улучшить";
+                pauseStr = "НА ПАУЗЕ";
+                noMoneyStr = "Нет денег";
+                costStr = "Цена: ";
+                moneyCountStr = "Денег: ";
+                waveStr = "Волна ";
+                enemyCountStr = "Врагов осталось: ";
+                timeCounterStr = "Времени: ";
+                currencyStr = "р";
+                upgradeLevelStr = "Уровень: ";
+            }
+            case ENGLISH -> {
+                bMenuStr = "Menu";
+                bPauseStr = "Pause";
+                bUnpauseStr = "Unpause";
+                bSellStr = "Sell";
+                bUpgradeStr = "Upgrade";
+                pauseStr = "PAUSED";
+                noMoneyStr = "No money";
+                costStr = "Cost: ";
+                moneyCountStr = "Money: ";
+                waveStr = "Wave ";
+                enemyCountStr = "Enemies left: ";
+                timeCounterStr = "Time til wave: ";
+                currencyStr = "g";
+                upgradeLevelStr = "Level: ";
+            }
+        }
+    }
+
     private void initButtons() {
         //Кнопочки башен
-        bMenu = new MyButton("Меню", 2, 642, 100, 30);
-        bPause = new MyButton("Пауза", 2, 682, 100, 30);
+        bMenu = new MyButton("", 2, 642, 100, 30);
+        bPause = new MyButton("", 2, 682, 100, 30);
 
         towerButtons = new MyButton[3];
 
@@ -55,11 +96,19 @@ public class ActionBar extends Bar {
         for (int i = 0; i < towerButtons.length; i++) {
             towerButtons[i] = new MyButton("", xStart + xOffset * i, yStart, w, h, i);
         }
-        bSellTower = new MyButton("Продать", 420, 702, 80, 25);
-        bUpgradeTower = new MyButton("Улучшить", 545, 702, 80, 25);
+        bSellTower = new MyButton("", 420, 702, 80, 25);
+        bUpgradeTower = new MyButton("", 545, 702, 80, 25);
+    }
+
+    public void setButtonText() {
+        bMenu.setText(bMenuStr);
+        bPause.setText(bPauseStr);
+        bSellTower.setText(bSellStr);
+        bUpgradeTower.setText(bUpgradeStr);
     }
 
     private void drawButtons(Graphics g) {
+
         bMenu.draw(g);
         bPause.draw(g);
 
@@ -88,7 +137,7 @@ public class ActionBar extends Bar {
 
         if (playing.isGamePaused()) {
             g.setColor(Color.YELLOW);
-            g.drawString("НА ПАУЗЕ", 110, 790);
+            g.drawString(pauseStr, 110, 790);
         }
     }
 
@@ -100,11 +149,11 @@ public class ActionBar extends Bar {
 
         g.drawString(getTowerCostName(), 285, 670);
         if (!isGoldEnoughForTower(towerCostType)) {
-            g.drawString("Денег нет", 285, 725);
+            g.drawString(noMoneyStr, 285, 725);
             g.setColor(Color.RED);
         } else
             g.setColor(Color.BLACK);
-        g.drawString("Цена: " + getTowerCost() + "р", 285, 695);
+        g.drawString(costStr + getTowerCost() + currencyStr, 285, 695);
     }
 
     private int getTowerCost() {
@@ -116,7 +165,7 @@ public class ActionBar extends Bar {
     }
 
     private void drawGoldAmount(Graphics g) {
-        g.drawString("Деньги: " + gold + "р", 110, 725);
+        g.drawString(moneyCountStr + gold + currencyStr, 110, 725);
     }
 
     private void drawWaveInfo(Graphics g) {
@@ -129,14 +178,13 @@ public class ActionBar extends Bar {
     private void drawWaveLeftInfo(Graphics g) {
         int current = playing.getWaveManager().getWaveIndex();
         int size = playing.getWaveManager().getWaves().size();
-        g.drawString("Волна " + (current + 1) + "/" + size, 425, 770);
+        g.drawString(waveStr + (current + 1) + "/" + size, 425, 770);
     }
 
     private void drawEnemiesLeftInfo(Graphics g) {
         g.setColor(Color.BLACK);
         int remaining = playing.getEnemyManager().getAmountOfAllLiveEnemies();
-        int size = playing.getWaveManager().getWaveIndex();
-        g.drawString("Врагов осталось: " + remaining, 425, 790);
+        g.drawString(enemyCountStr + remaining, 425, 790);
     }
 
     private void drawWaveTimerInfo(Graphics g) {
@@ -144,7 +192,7 @@ public class ActionBar extends Bar {
             g.setColor(Color.BLACK);
             float timeLeft = playing.getWaveManager().getTimeLeft();
             String formattedText = formatter.format(timeLeft);
-            g.drawString("Время до волны: " + formattedText, 425, 750);
+            g.drawString(timeCounterStr + formattedText, 425, 750);
         }
     }
 
@@ -166,7 +214,7 @@ public class ActionBar extends Bar {
             g.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
             g.drawString(Constants.Towers.getName(displayedTower.getTowerType()), 480, 660);
             g.drawString("ID: " + displayedTower.getId(), 480, 675);
-            g.drawString("Уровень: " + displayedTower.getTier(), 540, 660);
+            g.drawString(upgradeLevelStr + displayedTower.getTier(), 540, 660);
 
             drawDisplayedTowerBorder(g);
             drawDisplayedTowerRange(g);
@@ -182,10 +230,10 @@ public class ActionBar extends Bar {
             }
             if (bSellTower.isMouseOver()) {
                 g.setColor(Color.RED);
-                g.drawString("Продать: " + getSellAmount(displayedTower) + "р", 480, 695);
+                g.drawString(bSellStr + ": " + getSellAmount(displayedTower) + currencyStr, 480, 695);
             } else if (bUpgradeTower.isMouseOver() && gold >= getUpgradeAmount(displayedTower)) {
                 g.setColor(Color.BLUE);
-                g.drawString("Улучшить: " + getUpgradeAmount(displayedTower) + "р", 480, 695);
+                g.drawString(bUpgradeStr + ": " + getUpgradeAmount(displayedTower) + currencyStr, 480, 695);
             }
         }
     }
@@ -243,9 +291,9 @@ public class ActionBar extends Bar {
         playing.setGamePaused(!playing.isGamePaused());
 
         if (playing.isGamePaused())
-            bPause.setText("Продолжить");
+            bPause.setText(bUnpauseStr);
         else
-            bPause.setText("Пауза");
+            bPause.setText(bPauseStr);
     }
 
     public void mouseClicked(int x, int y) {
@@ -267,7 +315,7 @@ public class ActionBar extends Bar {
                 if (b.getBounds().contains(x, y)) {
                     if (!isGoldEnoughForTower(b.getId()))
                         return;
-                    selectedTower = new Tower(0, 0, -1, b.getId());
+                    selectedTower = new Tower(0, 0, -1, b.getId(), false);
                     playing.setSelectedTower(selectedTower);
                     return;
                 }
@@ -354,5 +402,9 @@ public class ActionBar extends Bar {
 
     public void addGold(int award) {
         this.gold += award;
+    }
+
+    public String getbMenuStr() {
+        return bMenuStr;
     }
 }

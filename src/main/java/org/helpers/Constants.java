@@ -1,6 +1,8 @@
 package org.helpers;
 
 
+import static org.main.LangStates.*;
+
 public class Constants {
 
     public static class Temp {
@@ -86,13 +88,23 @@ public class Constants {
 
 
         public static String getName(int towerType) {
-            return switch (towerType) {
-                case CANNON -> "Пушка!!";
-                case ARCHER -> "Лучник";
-                case WIZARD -> "Чародей";
-                default -> "";
-            };
+            if (langState == RUSSIAN)
+                return switch (towerType) {
+                    case CANNON -> "Пушка!!";
+                    case ARCHER -> "Лучник";
+                    case WIZARD -> "Чародей";
+                    default -> "";
+                };
+            else if (langState == ENGLISH)
+                return switch (towerType) {
+                    case CANNON -> "Cannon";
+                    case ARCHER -> "Archer";
+                    case WIZARD -> "Wizard";
+                    default -> "";
+                };
+            return "";
         }
+
         public static int getTowerCost(int towerType) {
             return switch (towerType) {
                 case CANNON -> 65;

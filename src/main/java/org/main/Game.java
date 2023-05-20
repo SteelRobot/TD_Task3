@@ -71,10 +71,12 @@ public class Game extends JFrame implements Runnable {
 
     private void updateGame() {
         //Для обновления важных данных
-        switch(GameStates.gameState) {
+        switch (GameStates.gameState) {
             case PLAYING -> playing.update();
-            case MENU -> {}
-            case SETTINGS -> {}
+            case MENU -> {
+            }
+            case SETTINGS -> {
+            }
             case EDIT -> editing.update();
         }
     }
@@ -124,16 +126,25 @@ public class Game extends JFrame implements Runnable {
     public Render getRender() {
         return render;
     }
+
     public Menu getMenu() {
         return menu;
     }
+
     public Settings getSettings() {
         return settings;
     }
+
     public Playing getPlaying() {
         return playing;
     }
-    public Editing getEditor() {return editing;}
-    public TileManager getTileManager() {return tileManager;}
+
+    public Editing getEditor() {
+        return editing;
+    }
+
+    public TileManager getTileManager() {
+        return tileManager;
+    }
 }
 

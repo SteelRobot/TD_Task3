@@ -1,5 +1,6 @@
 package org.ui;
 
+import org.helpers.Constants;
 import org.helpers.LoadSave;
 import org.objects.Tile;
 import org.scenes.Editing;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static org.main.GameStates.MENU;
 import static org.main.GameStates.SetGameState;
+import static org.main.LangStates.langState;
 
 public class ToolBar extends Bar {
 
@@ -42,8 +44,8 @@ public class ToolBar extends Bar {
     }
 
     private void initButtons() {
-        bMenu = new MyButton("Меню", 2, 642, 100, 30);
-        bSave = new MyButton("Сохранить", 2, 682, 100, 30);
+        bMenu = new MyButton("", 2, 642, 100, 30);
+        bSave = new MyButton("", 2, 682, 100, 30);
 
         int w = 50;
         int h = 50;
@@ -66,6 +68,20 @@ public class ToolBar extends Bar {
         bPathEnd = new MyButton("PathStart", xStart + xOffset, yStart + xOffset, w, h, i++);
 
     }
+
+    private void setButtonText() {
+        switch (langState) {
+            case RUSSIAN -> {
+                bMenu.setText("Меню");
+                bSave.setText("Сохранить");
+            }
+            case ENGLISH -> {
+                bMenu.setText("Menu");
+                bSave.setText("Save");
+            }
+        }
+    }
+
 
     private void initMapButton(MyButton b, ArrayList<Tile> list, int x, int y, int xOff, int w, int h, int id) {
         b = new MyButton("", x + xOff * id, y, w, h, id);
@@ -91,6 +107,8 @@ public class ToolBar extends Bar {
 
         g.setColor(new Color(220, 123, 14));
         g.fillRect(x, y, width, height);
+
+        setButtonText();
 
         drawButtons(g);
     }

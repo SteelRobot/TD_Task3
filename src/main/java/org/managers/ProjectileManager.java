@@ -59,8 +59,11 @@ public class ProjectileManager {
         float xSpeed = xPercent * Constants.Projectiles.getSpeed(type);
         float ySpeed = Constants.Projectiles.getSpeed(type) - xSpeed;
 
-        if (t.getX() > e.getX())
+        if (t.getX() > e.getX()) {
             xSpeed *= -1;
+            t.setSide(false);
+        }
+        else t.setSide(true);
 
         if (t.getY() > e.getY())
             ySpeed *= -1;
