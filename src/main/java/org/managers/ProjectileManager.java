@@ -56,8 +56,8 @@ public class ProjectileManager {
 
         float xPercent = (float) Math.abs(xDist) / totalDist;
 
-        float xSpeed = xPercent * Constants.Projectiles.GetSpeed(type);
-        float ySpeed = Constants.Projectiles.GetSpeed(type) - xSpeed;
+        float xSpeed = xPercent * Constants.Projectiles.getSpeed(type);
+        float ySpeed = Constants.Projectiles.getSpeed(type) - xSpeed;
 
         if (t.getX() > e.getX())
             xSpeed *= -1;
@@ -120,6 +120,8 @@ public class ProjectileManager {
             if (e.isAlive())
                 if (e.getBounds().contains(p.getPos())) {
                     e.hurt(p.getDmg());
+                    if (p.getProjectileType() == CHAINS)
+                        e.slow();
                     return true;
                 }
         }

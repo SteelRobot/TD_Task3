@@ -27,10 +27,6 @@ public class Projectile {
         return pos;
     }
 
-    public void setPos(Point2D.Float pos) {
-        this.pos = pos;
-    }
-
     public int getId() {
         return id;
     }

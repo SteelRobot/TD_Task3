@@ -1,10 +1,13 @@
 package org.enemies;
 
+import org.helpers.Constants;
+import org.managers.EnemyManager;
+
 import static org.helpers.Constants.Enemies.BOAR;
 
 public class Boar extends Enemy {
 
-    public Boar(float x, float y, int ID) {
-        super(x, y, ID, BOAR);
+    public Boar(float x, float y, int ID, EnemyManager em) {
+        super(x, y, ID, BOAR, em);
     }
 }

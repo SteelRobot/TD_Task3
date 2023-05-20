@@ -1,11 +1,13 @@
 package org.scenes;
 
 import org.enemies.Enemy;
+import org.helpers.Constants;
 import org.helpers.LoadSave;
 import org.main.Game;
 import org.managers.EnemyManager;
 import org.managers.ProjectileManager;
 import org.managers.TowerManager;
+import org.managers.WaveManager;
 import org.objects.PathPoint;
 import org.objects.Tower;
 import org.ui.ActionBar;
@@ -19,14 +21,18 @@ import static org.helpers.Constants.Tiles.*;
 
 public class Playing extends GameScene implements SceneMethods {
 
+    private static final int GOLD_TICK_TIMER = 3; //Секунды
     private int[][] lvl;
     private ActionBar actionBar;
     private int mouseX, mouseY;
     private EnemyManager enemyManager;
     private TowerManager towerManager;
     private ProjectileManager projectileManager;
+    private WaveManager waveManager;
     private PathPoint start, end;
     private Tower selectedTower;
+    private int goldTick;
+    private boolean gamePaused = false;
 
 
     public Playing(Game game) {
@@ -39,6 +45,7 @@ public class Playing extends GameScene implements SceneMethods {
         enemyManager = new EnemyManager(this, start, end);
         towerManager = new TowerManager(this);
         projectileManager = new ProjectileManager(this);
+        waveManager = new WaveManager(this);
     }
 
     private void loadDefaultLevel() {
@@ -53,10 +60,62 @@ public class Playing extends GameScene implements SceneMethods {
     }
 
     public void update() {
-        updateTick();
-        enemyManager.update();
-        towerManager.update();
-        projectileManager.update();
+        if (!gamePaused) {
+            updateTick();
+            waveManager.update();
+
+            goldTick++;
+            if (goldTick % (60 * GOLD_TICK_TIMER) == 0)
+                actionBar.addGold(1);
+
+            if (isAllEnemiesDead()) {
+                if (isThereMoreWaves()) {
+                    waveManager.startWaveTimer();
+                    if (isWaveTimeOver()) {
+                        waveManager.increaseWaveIndex();
+                        enemyManager.getEnemies().clear();
+                        waveManager.resetEnemyIndex();
+                    }
+                }
+            }
+
+            if (isTimeForNewEnemy()) {
+                spawnEnemy();
+            }
+
+            enemyManager.update();
+            towerManager.update();
+            projectileManager.update();
+        }
+    }
+
+    private boolean isWaveTimeOver() {
+        return waveManager.isWaveTimeOver();
+    }
+
+    private boolean isThereMoreWaves() {
+        return waveManager.isThereMoveWaves();
+    }
+
+    private boolean isAllEnemiesDead() {
+        if (waveManager.isThereMoreEnemiesInWave())
+            return false;
+        for (Enemy e : enemyManager.getEnemies()) {
+            if (e.isAlive())
+                return false;
+        }
+        return true;
+    }
+
+    private void spawnEnemy() {
+        enemyManager.spawnEnemy(waveManager.getNextEnemy());
+    }
+
+    private boolean isTimeForNewEnemy() {
+        if (getWaveManager().isTimeForNewEnemy()) {
+            return getWaveManager().isThereMoreEnemiesInWave();
+        }
+        return false;
     }
 
     public void setSelectedTower(Tower selectedTower) {
@@ -111,23 +170,16 @@ public class Playing extends GameScene implements SceneMethods {
         return getGame().getTileManager().getTile(id).getTileType();
     }
 
-    @Override
-    public void mouseClicked(int x, int y) {
-        if (y >= 640)
-            actionBar.mouseClicked(x, y);
-        else {
-            if (selectedTower != null) {
-                if (isTileGrass(mouseX, mouseY)) {
-                    if (getTowerAt(mouseX, mouseY) == null) {
-                        towerManager.addTower(selectedTower, mouseX, mouseY);
-                        selectedTower = null;
-                    }
-                }
-            } else {
-                Tower t = getTowerAt(mouseX, mouseY);
-                actionBar.displayTower(t);
-            }
-        }
+    private void removeGold(int towerType) {
+        actionBar.payForTower(towerType);
+    }
+
+    public void removeTower(Tower displayedTower) {
+        towerManager.removeTower(displayedTower);
+    }
+
+    public void upgradeTower(Tower displayedTower) {
+        towerManager.upgradeTower(displayedTower);
     }
 
     private Tower getTowerAt(int x, int y) {
@@ -145,10 +197,38 @@ public class Playing extends GameScene implements SceneMethods {
         projectileManager.newProjectile(t, e);
     }
 
+    public void rewardPlayer(int enemyType) {
+        actionBar.addGold(Constants.Enemies.getAward(enemyType));
+    }
+
+    public void setGamePaused(boolean gamePaused) {
+        this.gamePaused = gamePaused;
+    }
+
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             selectedTower = null;
             actionBar.setDisplayedTower(null);
+        }
+    }
+
+    @Override
+    public void mouseClicked(int x, int y) {
+        if (y >= 640)
+            actionBar.mouseClicked(x, y);
+        else {
+            if (selectedTower != null) {
+                if (isTileGrass(mouseX, mouseY)) {
+                    if (getTowerAt(mouseX, mouseY) == null) {
+                        towerManager.addTower(selectedTower, mouseX, mouseY);
+                        removeGold(selectedTower.getTowerType());
+                        selectedTower = null;
+                    }
+                }
+            } else {
+                Tower t = getTowerAt(mouseX, mouseY);
+                actionBar.displayTower(t);
+            }
         }
     }
 
@@ -183,5 +263,13 @@ public class Playing extends GameScene implements SceneMethods {
         return towerManager;
     }
 
-    public EnemyManager getEnemyManager() {return enemyManager;}
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
+    }
+
+    public WaveManager getWaveManager() {
+        return waveManager;
+    }
+
+    public boolean isGamePaused() {return gamePaused;}
 }
