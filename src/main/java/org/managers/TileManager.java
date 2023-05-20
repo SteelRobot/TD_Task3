@@ -65,12 +65,6 @@ public class TileManager {
         tiles.addAll(islands);
     }
 
-//    private BufferedImage[] getImgs(int firstX, int firstY, int secondX, int secondY) {
-//
-//        return new BufferedImage[]{getSprite(firstX, firstY),
-//                getSprite(secondX, secondY)};
-//    }
-
 
     private void loadAtlas() {
         atlas = LoadSave.getSpriteAtlas();

@@ -19,6 +19,7 @@ public class EnemyManager {
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private PathPoint start, end;
     private int hpBarWidth = 20;
+    private BufferedImage slowEffect;
 
     public EnemyManager(Playing playing, PathPoint start, PathPoint end) {
         this.playing = playing;
@@ -26,12 +27,13 @@ public class EnemyManager {
         this.end = end;
         enemyImgs = new BufferedImage[4];
 
-        addEnemy(GOLEM);
-        addEnemy(BOAR);
-        addEnemy(SLIME);
-        addEnemy(GOBLIN);
+        loadEffectImg();
 
         loadEnemyImgs();
+    }
+
+    private void loadEffectImg() {
+        slowEffect = LoadSave.getSpriteAtlas().getSubimage(0, 3 * 32, 32, 32);
     }
 
     private void loadEnemyImgs() {
@@ -45,10 +47,13 @@ public class EnemyManager {
     }
 
     public void update() {
+
         for (Enemy e : enemies)
             if (e.isAlive())
                 updateEnemyMove(e);
     }
+
+
 
     public void updateEnemyMove(Enemy e) {
         //Двигает если есть куда двигаться, а если стоит на базе, то стоит и ну короче -жизни
@@ -59,8 +64,9 @@ public class EnemyManager {
         int newY = (int) (e.getY() + getSpeedAndHeight(e.getLastDir(), e.getEnemyType()));
 
         if (getTileType(newX, newY) == ROAD_TILE) {
-            e.move(GetSpeed(e.getEnemyType()), e.getLastDir());
+            e.move(getSpeed(e.getEnemyType()), e.getLastDir());
         } else if (isAtEnd(e)) {
+            e.kill();
             System.out.println("-жизнь :(");
         } else {
             setNewDirectionAndMove(e);
@@ -82,15 +88,15 @@ public class EnemyManager {
         if (dir == LEFT || dir == RIGHT) {
             int newY = (int) (e.getY() + getSpeedAndHeight(UP, e.getEnemyType()));
             if (getTileType((int) e.getX(), newY) == ROAD_TILE)
-                e.move(GetSpeed(e.getEnemyType()), UP);
+                e.move(getSpeed(e.getEnemyType()), UP);
             else
-                e.move(GetSpeed(e.getEnemyType()), DOWN);
+                e.move(getSpeed(e.getEnemyType()), DOWN);
         } else {
             int newX = (int) (e.getX() + getSpeedAndWidth(RIGHT, e.getEnemyType()));
             if (getTileType(newX, (int) e.getY()) == ROAD_TILE)
-                e.move(GetSpeed(e.getEnemyType()), RIGHT);
+                e.move(getSpeed(e.getEnemyType()), RIGHT);
             else
-                e.move(GetSpeed(e.getEnemyType()), LEFT);
+                e.move(getSpeed(e.getEnemyType()), LEFT);
         }
     }
 
@@ -119,20 +125,24 @@ public class EnemyManager {
 
     private float getSpeedAndHeight(int dir, int enemyType) {
         if (dir == UP) {
-            return -GetSpeed(enemyType);
+            return -getSpeed(enemyType);
         } else if (dir == DOWN) {
-            return GetSpeed(enemyType) + 32;
+            return getSpeed(enemyType) + 32;
         }
         return 0;
     }
 
     private float getSpeedAndWidth(int dir, int enemyType) {
         if (dir == LEFT) {
-            return -GetSpeed(enemyType);
+            return -getSpeed(enemyType);
         } else if (dir == RIGHT) {
-            return GetSpeed(enemyType) + 32;
+            return getSpeed(enemyType) + 32;
         }
         return 0;
+    }
+
+    public void spawnEnemy(int nextEnemy) {
+        addEnemy(nextEnemy);
     }
 
     public void addEnemy(int enemyType) {
@@ -141,10 +151,10 @@ public class EnemyManager {
         int y = start.getyCord() * 32;
 
         switch (enemyType) {
-            case GOLEM -> enemies.add(new Golem(x, y, 0));
-            case SLIME -> enemies.add(new Slime(x, y, 0));
-            case BOAR -> enemies.add(new Boar(x, y, 0));
-            case GOBLIN -> enemies.add(new Goblin(x, y, 0));
+            case GOLEM -> enemies.add(new Golem(x, y, 0, this));
+            case SLIME -> enemies.add(new Slime(x, y, 0, this));
+            case BOAR -> enemies.add(new Boar(x, y, 0, this));
+            case GOBLIN -> enemies.add(new Goblin(x, y, 0, this));
         }
     }
 
@@ -153,7 +163,14 @@ public class EnemyManager {
             if (e.isAlive()) {
                 drawEnemy(e, g);
                 drawHealthBar(e, g);
+                drawEffects(e, g);
             }
+        }
+    }
+
+    private void drawEffects(Enemy e, Graphics g) {
+        if (e.isSlowed()) {
+            g.drawImage(slowEffect, (int) e.getX(), (int) e.getY(), null);
         }
     }
 
@@ -172,5 +189,18 @@ public class EnemyManager {
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public int getAmountOfAllLiveEnemies() {
+        int size = 0;
+        for (Enemy e : enemies)
+            if (e.isAlive())
+                size++;
+
+        return size;
+    }
+
+    public void rewardPlayer(int enemyType) {
+        playing.rewardPlayer(enemyType);
     }
 }

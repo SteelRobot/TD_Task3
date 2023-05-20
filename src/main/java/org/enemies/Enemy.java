@@ -1,11 +1,14 @@
 package org.enemies;
 
 import org.helpers.Constants;
+import org.managers.EnemyManager;
 
 import java.awt.*;
+
 import static org.helpers.Constants.Direction.*;
 
 public abstract class Enemy {
+    protected EnemyManager enemyManager;
 
     protected float x, y;
     protected Rectangle bounds;
@@ -15,19 +18,22 @@ public abstract class Enemy {
     protected int enemyType;
     protected int lastDir;
     protected boolean alive = true;
+    protected int slowTickLimit = 120; //Замедляет на 2 секунды (60 - одна секунда)
+    protected int slowTick = slowTickLimit;
 
-    public Enemy(float x, float y, int ID, int enemyType) {
+    public Enemy(float x, float y, int ID, int enemyType, EnemyManager enemyManager) {
         this.x = x;
         this.y = y;
         this.ID = ID;
         this.enemyType = enemyType;
+        this.enemyManager = enemyManager;
         bounds = new Rectangle((int) x, (int) y, 32, 32);
         lastDir = -1;
         setStartHealth();
     }
 
     private void setStartHealth() {
-        health = Constants.Enemies.GetStartHealth(enemyType);
+        health = Constants.Enemies.getStartHealth(enemyType);
         maxHealth = health;
     }
 
@@ -35,11 +41,27 @@ public abstract class Enemy {
         this.health -= damage;
         if (health <= 0) {
             alive = false;
+            enemyManager.rewardPlayer(enemyType);
         }
+    }
+
+    public void kill() {
+        //Когда враг доходит до базы
+        alive = false;
+        health = 0;
+    }
+
+    public void slow() {
+        slowTick = 0;
     }
 
     public void move(float speed, int dir) {
         lastDir = dir;
+
+        if (slowTick < slowTickLimit) {
+            slowTick++;
+            speed *= 0.5f;
+        }
         switch (dir) {
             case LEFT -> this.x -= speed;
             case UP -> this.y -= speed;
@@ -92,5 +114,12 @@ public abstract class Enemy {
     public int getLastDir() {
         return lastDir;
     }
-    public boolean isAlive() {return alive;}
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public boolean isSlowed() {
+        return slowTick < slowTickLimit;
+    }
 }

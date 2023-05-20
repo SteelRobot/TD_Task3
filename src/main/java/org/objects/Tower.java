@@ -2,14 +2,18 @@ package org.objects;
 
 import org.helpers.Constants;
 
+import static org.helpers.Constants.Towers.*;
+
 public class Tower {
-    private int x, y, id, towerType, cdTick, dmg;
+    private int x, y, id, towerType, cdTick, dmg, tier;
     private float range, cooldown;
+
     public Tower(int x, int y, int id, int towerType) {
         this.x = x;
         this.y = y;
         this.id = id;
         this.towerType = towerType;
+        tier = 1;
         setDefaultDamage();
         setDefaultRange();
         setDefaultCooldown();
@@ -17,6 +21,28 @@ public class Tower {
 
     public void update() {
         cdTick++;
+    }
+
+    public void upgradeTower() {
+        tier++;
+
+        switch (towerType) {
+            case ARCHER:
+                dmg += 2;
+                range += 20;
+                cooldown -= 5;
+                break;
+            case CANNON:
+                dmg += 5;
+                range += 20;
+                cooldown -= 15;
+                break;
+            case WIZARD:
+                dmg += 1;
+                range += 20;
+                cooldown -= 10;
+                break;
+        }
     }
 
     public boolean isCooldownOver() {
@@ -82,5 +108,9 @@ public class Tower {
 
     public float getCooldown() {
         return cooldown;
+    }
+
+    public int getTier() {
+        return tier;
     }
 }

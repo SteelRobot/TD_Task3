@@ -20,7 +20,17 @@ public class Constants {
         public static final int BOAR = 2;
         public static final int GOBLIN = 3;
 
-        public static float GetSpeed(int enemyType) {
+        public static int getAward(int enemyType) {
+            return switch (enemyType) {
+                case GOLEM -> 5;
+                case SLIME -> 25;
+                case BOAR -> 5;
+                case GOBLIN -> 10;
+                default -> 0;
+            };
+        }
+
+        public static float getSpeed(int enemyType) {
             return switch (enemyType) {
                 case GOLEM -> 0.5f;
                 case SLIME -> 0.65f;
@@ -31,7 +41,7 @@ public class Constants {
             };
         }
 
-        public static int GetStartHealth(int enemyType) {
+        public static int getStartHealth(int enemyType) {
             return switch (enemyType) {
                 case GOLEM -> 100;
                 case SLIME -> 40;
@@ -75,12 +85,20 @@ public class Constants {
         }
 
 
-        public static String GetName(int towerType) {
+        public static String getName(int towerType) {
             return switch (towerType) {
-                case CANNON -> "Cannon";
-                case ARCHER -> "Archer";
-                case WIZARD -> "Wizard";
+                case CANNON -> "Пушка!!";
+                case ARCHER -> "Лучник";
+                case WIZARD -> "Чародей";
                 default -> "";
+            };
+        }
+        public static int getTowerCost(int towerType) {
+            return switch (towerType) {
+                case CANNON -> 65;
+                case ARCHER -> 30;
+                case WIZARD -> 45;
+                default -> 0;
             };
         }
     }
@@ -96,7 +114,7 @@ public class Constants {
         public static final int CHAINS = 1;
         public static final int BOMB = 2;
 
-        public static float GetSpeed(int type) {
+        public static float getSpeed(int type) {
             return switch (type) {
                 case ARROW -> 8f;
                 case BOMB -> 4f;
