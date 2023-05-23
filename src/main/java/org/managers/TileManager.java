@@ -3,6 +3,7 @@ package org.managers;
 import org.helpers.ImgFix;
 import org.helpers.LoadSave;
 import org.objects.Tile;
+
 import static org.helpers.Constants.Tiles.*;
 
 import java.awt.image.BufferedImage;
@@ -49,7 +50,7 @@ public class TileManager {
         corners.add(BR_WATER_CORNER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(5, 0), 270), id++, WATER_TILE));
 
         beaches.add(T_WATER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(6, 0), 0), id++, WATER_TILE));
-        beaches.add(R_WATER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(6, 0), 90), id++,WATER_TILE));
+        beaches.add(R_WATER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(6, 0), 90), id++, WATER_TILE));
         beaches.add(B_WATER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(6, 0), 180), id++, WATER_TILE));
         beaches.add(L_WATER = new Tile(ImgFix.getBuildRotImg(getAniSprites(0, 0), getSprite(6, 0), 270), id++, WATER_TILE));
 
@@ -77,6 +78,7 @@ public class TileManager {
     public BufferedImage getSprite(int id) {
         return tiles.get(id).getSprite();
     }
+
     public BufferedImage getAniSprite(int id, int animationIndex) {
         return tiles.get(id).getSprite(animationIndex);
     }
@@ -95,6 +97,18 @@ public class TileManager {
 
     public boolean isSpriteAnimation(int spriteID) {
         return tiles.get(spriteID).isAnimation();
+    }
+
+    public int[][] getTypeArr() {
+        int[][] idArr = LoadSave.GetLevelData();
+        int[][] typeArr = new int[idArr.length][idArr[0].length];
+
+        for (int j = 0; j < idArr.length; j++)
+            for (int i = 0; i < idArr[j].length; i++) {
+                int id = idArr[j][i];
+                typeArr[j][i] = tiles.get(id).getTileType();
+            }
+        return typeArr;
     }
 
     public ArrayList<Tile> getRoadsS() {

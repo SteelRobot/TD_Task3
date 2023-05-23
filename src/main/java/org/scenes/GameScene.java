@@ -8,12 +8,14 @@ public class GameScene {
 
     private Game game;
     protected int animationIndex;
-    protected int ANIMATION_SPEED = 40;
+    protected int ANIMATION_SPEED;
     protected  int tick;
 
 
     public GameScene(Game game) {
         this.game = game;
+
+        ANIMATION_SPEED = 40;
     }
 
     protected void updateTick() {

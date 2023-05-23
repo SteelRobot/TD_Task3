@@ -17,15 +17,21 @@ import static org.helpers.Constants.Towers.*;
 
 public class ProjectileManager {
     private Playing playing;
-    private ArrayList<Projectile> projectiles = new ArrayList<>();
-    private ArrayList<Explosion> explosions = new ArrayList<>();
+    private ArrayList<Projectile> projectiles;
+    private ArrayList<Explosion> explosions;
     private BufferedImage[] projImgs, explosionImgs;
     private int projectileID;
-    private boolean drawExplosion = false;
+    private boolean drawExplosion;
 
     public ProjectileManager(Playing playing) {
         this.playing = playing;
         projImgs = new BufferedImage[3];
+
+        projectiles = new ArrayList<>();
+
+        explosions = new ArrayList<>();
+        drawExplosion = false;
+
         importImgs();
     }
 
@@ -62,8 +68,7 @@ public class ProjectileManager {
         if (t.getX() > e.getX()) {
             xSpeed *= -1;
             t.setSide(false);
-        }
-        else t.setSide(true);
+        } else t.setSide(true);
 
         if (t.getY() > e.getY())
             ySpeed *= -1;
@@ -77,6 +82,13 @@ public class ProjectileManager {
 
             if (xDist < 0)
                 rotate += 180;
+        }
+
+        for (Projectile p : projectiles) {
+            if (!p.isActive() && p.getProjectileType() == type) {
+                p.reuse(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, (int) t.getDmg(), rotate);
+                return;
+            }
         }
         projectiles.add(new Projectile(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, (int) t.getDmg(), rotate,
                 projectileID++, type));
@@ -93,6 +105,8 @@ public class ProjectileManager {
                         explosions.add(new Explosion(p.getPos()));
                         explodeOnEnemies(p);
                     }
+                } else if (isProjectileOutsideBounds(p)) {
+
                 }
             }
         }
@@ -129,6 +143,14 @@ public class ProjectileManager {
                 }
         }
         return false;
+    }
+
+    private boolean isProjectileOutsideBounds(Projectile p) {
+        if (p.getPos().x >= 0)
+            if (p.getPos().x <= 640)
+                if (p.getPos().y >= 0)
+                    return !(p.getPos().y <= 800);
+        return true;
     }
 
     public void draw(Graphics g) {
@@ -190,5 +212,11 @@ public class ProjectileManager {
         public Point2D.Float getPos() {
             return pos;
         }
+    }
+
+    public void reset() {
+        projectiles.clear();
+        explosions.clear();
+        projectileID = 0;
     }
 }

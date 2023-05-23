@@ -10,9 +10,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
-import static org.main.GameStates.MENU;
-import static org.main.GameStates.SetGameState;
-import static org.main.LangStates.langState;
+import static org.main.GameStates.*;
+import static org.main.langTexts.*;
 
 public class ActionBar extends Bar {
     private MyButton bMenu;
@@ -22,68 +21,43 @@ public class ActionBar extends Bar {
     private Tower selectedTower;
     private Tower displayedTower;
     private BufferedImage selectedTowerBorder;
-    private Color rangeColor = new Color(1, 1, 1, .4f);
+    private Color rangeColor;
     private DecimalFormat formatter;
-
-    private int gold = 100;
-
+    private int gold;
+    private int lives;
     private boolean showTowerCost;
     private int towerCostType;
-    private String bMenuStr, bPauseStr, bUnpauseStr, bSellStr, bUpgradeStr, pauseStr, noMoneyStr, costStr,
-            moneyCountStr, waveStr, enemyCountStr, timeCounterStr, currencyStr, upgradeLevelStr;
 
 
     public ActionBar(int x, int y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
         formatter = new DecimalFormat("0.0");
+
+        rangeColor = new Color(1, 1, 1, .4f);
+
+        gold = 100;
+        lives = 2;
+
+
         initButtons();
-        setLangTexts();
 
         selectedTowerBorder = getSelectedTowerBorder();
     }
 
-    public void setLangTexts() {
-        switch (langState) {
-            case RUSSIAN -> {
-                bMenuStr = "Меню";
-                bPauseStr = "Пауза";
-                bUnpauseStr = "Продолжить";
-                bSellStr = "Продать";
-                bUpgradeStr = "Улучшить";
-                pauseStr = "НА ПАУЗЕ";
-                noMoneyStr = "Нет денег";
-                costStr = "Цена: ";
-                moneyCountStr = "Денег: ";
-                waveStr = "Волна ";
-                enemyCountStr = "Врагов осталось: ";
-                timeCounterStr = "Времени: ";
-                currencyStr = "р";
-                upgradeLevelStr = "Уровень: ";
-            }
-            case ENGLISH -> {
-                bMenuStr = "Menu";
-                bPauseStr = "Pause";
-                bUnpauseStr = "Unpause";
-                bSellStr = "Sell";
-                bUpgradeStr = "Upgrade";
-                pauseStr = "PAUSED";
-                noMoneyStr = "No money";
-                costStr = "Cost: ";
-                moneyCountStr = "Money: ";
-                waveStr = "Wave ";
-                enemyCountStr = "Enemies left: ";
-                timeCounterStr = "Time til wave: ";
-                currencyStr = "g";
-                upgradeLevelStr = "Level: ";
-            }
-        }
+    public void resetAll() {
+        lives = 2;
+        gold = 100;
+        towerCostType = 0;
+        showTowerCost = false;
+        selectedTower = null;
+        displayedTower = null;
     }
 
     private void initButtons() {
         //Кнопочки башен
-        bMenu = new MyButton("", 2, 642, 100, 30);
-        bPause = new MyButton("", 2, 682, 100, 30);
+        bMenu = new MyButton(bMenuStr.toString(), 2, 642, 100, 30);
+        bPause = new MyButton(bPauseStr.toString(), 2, 682, 100, 30);
 
         towerButtons = new MyButton[3];
 
@@ -96,15 +70,22 @@ public class ActionBar extends Bar {
         for (int i = 0; i < towerButtons.length; i++) {
             towerButtons[i] = new MyButton("", xStart + xOffset * i, yStart, w, h, i);
         }
-        bSellTower = new MyButton("", 420, 702, 80, 25);
-        bUpgradeTower = new MyButton("", 545, 702, 80, 25);
+        bSellTower = new MyButton(bSellStr.toString(), 420, 702, 80, 25);
+        bUpgradeTower = new MyButton(bUpgradeStr.toString(), 545, 702, 80, 25);
+    }
+
+
+    public void removeOneLife() {
+        lives--;
+        if (lives <= 0)
+            SetGameState(GAME_OVER);
     }
 
     public void setButtonText() {
-        bMenu.setText(bMenuStr);
-        bPause.setText(bPauseStr);
-        bSellTower.setText(bSellStr);
-        bUpgradeTower.setText(bUpgradeStr);
+        bMenu.setText(bMenuStr.toString());
+        bPause.setText(bPauseStr.toString());
+        bSellTower.setText(bSellStr.toString());
+        bUpgradeTower.setText(bUpgradeStr.toString());
     }
 
     private void drawButtons(Graphics g) {
@@ -137,8 +118,11 @@ public class ActionBar extends Bar {
 
         if (playing.isGamePaused()) {
             g.setColor(Color.YELLOW);
-            g.drawString(pauseStr, 110, 790);
+            g.drawString(pauseStr.toString(), 110, 790);
         }
+
+        g.setColor(Color.BLACK);
+        g.drawString(livesStr.toString() + lives, 110, 750);
     }
 
     private void drawTowerCost(Graphics g) {
@@ -149,11 +133,11 @@ public class ActionBar extends Bar {
 
         g.drawString(getTowerCostName(), 285, 670);
         if (!isGoldEnoughForTower(towerCostType)) {
-            g.drawString(noMoneyStr, 285, 725);
+            g.drawString(noMoneyStr.toString(), 285, 725);
             g.setColor(Color.RED);
         } else
             g.setColor(Color.BLACK);
-        g.drawString(costStr + getTowerCost() + currencyStr, 285, 695);
+        g.drawString(costStr.toString() + getTowerCost() + currencyStr, 285, 695);
     }
 
     private int getTowerCost() {
@@ -165,7 +149,7 @@ public class ActionBar extends Bar {
     }
 
     private void drawGoldAmount(Graphics g) {
-        g.drawString(moneyCountStr + gold + currencyStr, 110, 725);
+        g.drawString(moneyCountStr.toString() + gold + currencyStr, 110, 725);
     }
 
     private void drawWaveInfo(Graphics g) {
@@ -178,13 +162,13 @@ public class ActionBar extends Bar {
     private void drawWaveLeftInfo(Graphics g) {
         int current = playing.getWaveManager().getWaveIndex();
         int size = playing.getWaveManager().getWaves().size();
-        g.drawString(waveStr + (current + 1) + "/" + size, 425, 770);
+        g.drawString(waveStr.toString() + (current + 1) + "/" + size, 425, 770);
     }
 
     private void drawEnemiesLeftInfo(Graphics g) {
         g.setColor(Color.BLACK);
         int remaining = playing.getEnemyManager().getAmountOfAllLiveEnemies();
-        g.drawString(enemyCountStr + remaining, 425, 790);
+        g.drawString(enemyCountStr.toString() + remaining, 425, 790);
     }
 
     private void drawWaveTimerInfo(Graphics g) {
@@ -214,7 +198,7 @@ public class ActionBar extends Bar {
             g.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
             g.drawString(Constants.Towers.getName(displayedTower.getTowerType()), 480, 660);
             g.drawString("ID: " + displayedTower.getId(), 480, 675);
-            g.drawString(upgradeLevelStr + displayedTower.getTier(), 540, 660);
+            g.drawString(upgradeLevelStr.toString() + displayedTower.getTier(), 540, 660);
 
             drawDisplayedTowerBorder(g);
             drawDisplayedTowerRange(g);
@@ -291,14 +275,15 @@ public class ActionBar extends Bar {
         playing.setGamePaused(!playing.isGamePaused());
 
         if (playing.isGamePaused())
-            bPause.setText(bUnpauseStr);
+            bPause.setText(bUnpauseStr.toString());
         else
-            bPause.setText(bPauseStr);
+            bPause.setText(bPauseStr.toString());
     }
 
     public void mouseClicked(int x, int y) {
         if (bMenu.getBounds().contains(x, y)) {
             SetGameState(MENU);
+            playing.resetAll();
         } else if (bPause.getBounds().contains(x, y))
             togglePause();
         else {
@@ -315,7 +300,7 @@ public class ActionBar extends Bar {
                 if (b.getBounds().contains(x, y)) {
                     if (!isGoldEnoughForTower(b.getId()))
                         return;
-                    selectedTower = new Tower(0, 0, -1, b.getId(), false);
+                    selectedTower = new Tower(0, 0, -1, b.getId());
                     playing.setSelectedTower(selectedTower);
                     return;
                 }
@@ -404,7 +389,7 @@ public class ActionBar extends Bar {
         this.gold += award;
     }
 
-    public String getbMenuStr() {
-        return bMenuStr;
+    public int getLives() {
+        return lives;
     }
 }

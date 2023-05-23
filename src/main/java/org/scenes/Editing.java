@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import static org.helpers.Constants.Temp.lvlName;
 import static org.helpers.Constants.Tiles.*;
 
 public class Editing extends GameScene implements SceneMethods {
@@ -18,20 +17,23 @@ public class Editing extends GameScene implements SceneMethods {
     private int[][] lvl;
     private Tile selectedTile;
     private int mouseX, mouseY, lastTileX, lastTileY, lastTileId;
-    private boolean drawSelect = false;
+    private boolean drawSelect;
     private PathPoint start, end;
 
     private ToolBar toolBar;
 
     public Editing(Game game) {
         super(game);
+
+        drawSelect = false;
+
         loadDefaultLevel();
         toolBar = new ToolBar(0, 640, 640, 160, this);
     }
 
     private void loadDefaultLevel() {
-        lvl = LoadSave.GetLevelData(lvlName);
-        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints(lvlName);
+        lvl = LoadSave.GetLevelData();
+        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints();
         start = points.get(0);
         end = points.get(1);
     }
@@ -81,7 +83,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     public void saveLevel() {
         //При нажатии кнопки сохранения уровень сохраняется
-        LoadSave.SaveLevel(lvlName, lvl, start, end);
+        LoadSave.SaveLevel(lvl, start, end);
         getGame().getPlaying().setLevel(lvl);
     }
 
@@ -161,4 +163,6 @@ public class Editing extends GameScene implements SceneMethods {
             toolBar.rotateSprite();
         }
     }
+
+    public ToolBar getToolBar() {return toolBar;}
 }

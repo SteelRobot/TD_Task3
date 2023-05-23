@@ -8,16 +8,23 @@ import java.util.Arrays;
 
 public class WaveManager {
     private Playing playing;
-    private ArrayList<Wave> waves = new ArrayList<>();
-    private int enemySpawnTickLimit = 60 * 1;
+    private ArrayList<Wave> waves;
+    private int enemySpawnTickLimit;
     private int enemySpawnTick = enemySpawnTickLimit;
     private int enemyIndex, waveIndex;
-    private int waveTickLimit = 60 * 5; //Колво секунд между волнами
-    private int waveTick = 0;
+    private int waveTickLimit;
+    private int waveTick;
     private boolean waveStartTimer, waveTickTimerOver;
 
     public WaveManager(Playing playing) {
         this.playing = playing;
+
+        waves = new ArrayList<>();
+
+        enemySpawnTickLimit = 60 * 1;
+        waveTickLimit = 60 * 5; //Кол-во секунд между волнами
+        waveTick = 0;
+
         createWaves();
     }
 
@@ -88,5 +95,16 @@ public class WaveManager {
 
     public boolean isWaveTimerStarted() {
         return waveStartTimer;
+    }
+
+    public void reset() {
+        waves.clear();
+        createWaves();
+        enemyIndex = 0;
+        waveIndex = 0;
+        waveStartTimer = false;
+        waveTickTimerOver = false;
+        waveTick = 0;
+        enemySpawnTick = enemySpawnTickLimit;
     }
 }

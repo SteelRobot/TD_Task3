@@ -17,9 +17,9 @@ public abstract class Enemy {
     protected int ID;
     protected int enemyType;
     protected int lastDir;
-    protected boolean alive = true;
-    protected int slowTickLimit = 120; //Замедляет на 2 секунды (60 - одна секунда)
-    protected int slowTick = slowTickLimit;
+    protected boolean alive;
+    protected int slowTickLimit;
+    protected int slowTick;
 
     public Enemy(float x, float y, int ID, int enemyType, EnemyManager enemyManager) {
         this.x = x;
@@ -29,6 +29,9 @@ public abstract class Enemy {
         this.enemyManager = enemyManager;
         bounds = new Rectangle((int) x, (int) y, 32, 32);
         lastDir = -1;
+        alive = true;
+        this.slowTickLimit = 120; //Замедляет на 2 секунды (60 - одна секунда)
+        slowTick = slowTickLimit;
         setStartHealth();
     }
 
@@ -99,14 +102,6 @@ public abstract class Enemy {
         return bounds;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
     public int getEnemyType() {
         return enemyType;
     }
@@ -121,5 +116,9 @@ public abstract class Enemy {
 
     public boolean isSlowed() {
         return slowTick < slowTickLimit;
+    }
+
+    public void setLastDir(int newDir) {
+        this.lastDir = newDir;
     }
 }

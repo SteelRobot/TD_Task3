@@ -2,14 +2,9 @@ package org.main;
 
 import org.helpers.LoadSave;
 import org.managers.TileManager;
-import org.scenes.Editing;
-import org.scenes.Menu;
-import org.scenes.Playing;
-import org.scenes.Settings;
+import org.scenes.*;
 
 import javax.swing.*;
-
-import static org.helpers.Constants.Temp.lvlName;
 
 public class Game extends JFrame implements Runnable {
 
@@ -25,12 +20,15 @@ public class Game extends JFrame implements Runnable {
     private Playing playing;
     private Settings settings;
     private Editing editing;
+    private GameOver gameOver;
 
     private TileManager tileManager;
 
     public Game() {
+        LoadSave.CreateFolder();
         //Создание уровня
         createDefaultLevel();
+        setLanguage();
         initClasses();
         //Создание самого окна
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -51,15 +49,20 @@ public class Game extends JFrame implements Runnable {
         playing = new Playing(this);
         settings = new Settings(this);
         editing = new Editing(this);
+        gameOver = new GameOver(this);
     }
 
     private void createDefaultLevel() {
-        //Класс, состоящий только из травы
+        //Уровень, состоящий только из травы
         int[] arr = new int[400];
         for (int i = 0; i < arr.length; i++)
             arr[i] = 0;
 
-        LoadSave.CreateLevel(lvlName, arr);
+        LoadSave.CreateLevel(arr);
+    }
+
+    private void setLanguage() {
+        LoadSave.CreateLanguageFile();
     }
 
     private void start() {
@@ -114,12 +117,12 @@ public class Game extends JFrame implements Runnable {
                 updates++;
             }
 
-            if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
-                System.out.println("FPS: " + frames + " | UPS: " + updates);
-                frames = 0;
-                updates = 0;
-                lastTimeCheck = System.currentTimeMillis();
-            }
+//            if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
+//                System.out.println("FPS: " + frames + " | UPS: " + updates);
+//                frames = 0;
+//                updates = 0;
+//                lastTimeCheck = System.currentTimeMillis();
+//            }
         }
     }
 
@@ -145,6 +148,9 @@ public class Game extends JFrame implements Runnable {
 
     public TileManager getTileManager() {
         return tileManager;
+    }
+    public GameOver getGameOver() {
+        return gameOver;
     }
 }
 

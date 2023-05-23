@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.main.GameStates.MENU;
 import static org.main.GameStates.SetGameState;
-import static org.main.LangStates.langState;
+import static org.main.langTexts.*;
 
 public class ToolBar extends Bar {
 
@@ -24,14 +24,18 @@ public class ToolBar extends Bar {
     private Editing editing;
     private MyButton bGrass, bWater, bRoadS, bRoadC, bWaterC, bWaterb, bWaterI;
     private MyButton currentButton;
-    private int currentIndex = 0;
+    private int currentIndex;
 
-    private Map<MyButton, ArrayList<Tile>> map = new HashMap<>();
+    private Map<MyButton, ArrayList<Tile>> map;
 
 
     public ToolBar(int x, int y, int width, int height, Editing editing) {
         super(x, y, width, height);
         this.editing = editing;
+
+        map = new HashMap<>();
+
+        currentIndex = 0;
 
         initPathImgs();
         initButtons();
@@ -44,8 +48,8 @@ public class ToolBar extends Bar {
     }
 
     private void initButtons() {
-        bMenu = new MyButton("", 2, 642, 100, 30);
-        bSave = new MyButton("", 2, 682, 100, 30);
+        bMenu = new MyButton(bMenuStr.toString(), 2, 642, 100, 30);
+        bSave = new MyButton(bSaveStr.toString(), 2, 682, 100, 30);
 
         int w = 50;
         int h = 50;
@@ -69,17 +73,9 @@ public class ToolBar extends Bar {
 
     }
 
-    private void setButtonText() {
-        switch (langState) {
-            case RUSSIAN -> {
-                bMenu.setText("Меню");
-                bSave.setText("Сохранить");
-            }
-            case ENGLISH -> {
-                bMenu.setText("Menu");
-                bSave.setText("Save");
-            }
-        }
+    public void setButtonText() {
+        bMenu.setText(bMenuStr.toString());
+        bSave.setText(bSaveStr.toString());
     }
 
 
@@ -101,14 +97,13 @@ public class ToolBar extends Bar {
 
         selectedTile = map.get(currentButton).get(currentIndex);
         editing.setSelectedTile(selectedTile);
+        System.out.println("aaa");
     }
 
     public void draw(Graphics g) {
 
         g.setColor(new Color(220, 123, 14));
         g.fillRect(x, y, width, height);
-
-        setButtonText();
 
         drawButtons(g);
     }
@@ -164,6 +159,8 @@ public class ToolBar extends Bar {
             SetGameState(MENU);
         } else if (bSave.getBounds().contains(x, y)) {
             saveLevel();
+            editing.getGame().getPlaying().resetAll();
+            editing.getGame().getPlaying().getEnemyManager().loadRoadDirArr();
         } else if (bWater.getBounds().contains(x, y)) {
             selectedTile = editing.getGame().getTileManager().getTile(bWater.getId());
             editing.setSelectedTile(selectedTile);
@@ -257,6 +254,7 @@ public class ToolBar extends Bar {
     public BufferedImage getPathStartImg() {
         return pathStart;
     }
+
     public BufferedImage getPathEndImg() {
         return pathEnd;
     }

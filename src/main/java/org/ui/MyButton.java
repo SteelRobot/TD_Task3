@@ -1,18 +1,21 @@
 package org.ui;
 
+import javax.swing.*;
 import java.awt.*;
 
-public class MyButton {
+public class MyButton extends JButton {
     //Классные кнопки
 
     public int x, y, width, height, id;
     private String text;
     private Rectangle bounds;
-    private Boolean mouseOver = false;
-    private Boolean mousePressed = false;
+    private Boolean mouseOver;
+    private Boolean mousePressed;
 
     public MyButton(String text, int x, int y, int width, int height) {
         //Нормальные кнопки
+        this.mouseOver = false;
+        this.mousePressed = false;
 
         this.text = text;
         this.x = x;
@@ -26,6 +29,8 @@ public class MyButton {
 
     public MyButton(String text, int x, int y, int width, int height, int id) {
         //Кнопки плиток и башен
+        this.mouseOver = false;
+        this.mousePressed = false;
 
         this.text = text;
         this.x = x;

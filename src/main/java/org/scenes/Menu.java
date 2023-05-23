@@ -8,6 +8,7 @@ import java.awt.*;
 
 import static org.main.GameStates.*;
 import static org.main.LangStates.*;
+import static org.main.langTexts.*;
 
 public class Menu extends GameScene implements SceneMethods {
     private MyButton bPlaying, bSettings, bQuit, bEdit, bEng, bRus;
@@ -23,29 +24,19 @@ public class Menu extends GameScene implements SceneMethods {
         int x = 640 / 2 - w / 2;
         int y = 150;
         int yOffset = 100;
-        bPlaying = new MyButton("Играть", x, y, w, h);
-        bEdit = new MyButton("Редактор", x, y + yOffset, w, h);
-        bSettings = new MyButton("Настройки", x, y + yOffset * 2, w, h);
-        bQuit = new MyButton("Выход", x, y + yOffset * 3, w, h);
+        bPlaying = new MyButton(bPlayingStr.toString(), x, y, w, h);
+        bEdit = new MyButton(bEditStr.toString(), x, y + yOffset, w, h);
+        bSettings = new MyButton(bSettingsStr.toString(), x, y + yOffset * 2, w, h);
+        bQuit = new MyButton(bQuitStr.toString(), x, y + yOffset * 3, w, h);
         bEng = new MyButton("", 245, 25, 50, 50);
         bRus = new MyButton("", 345, 25, 50, 50);
     }
 
     private void buttonsSetText() {
-        switch (langState) {
-            case RUSSIAN -> {
-                bPlaying.setText("Играть");
-                bEdit.setText("Редактор");
-                bSettings.setText("Настройки");
-                bQuit.setText("Выход");
-            }
-            case ENGLISH -> {
-                bPlaying.setText("Play");
-                bEdit.setText("Editor");
-                bSettings.setText("Settings");
-                bQuit.setText("Quit");
-            }
-        }
+        bPlaying.setText(bPlayingStr.toString());
+        bEdit.setText(bEditStr.toString());
+        bSettings.setText(bSettingsStr.toString());
+        bQuit.setText(bQuitStr.toString());
     }
 
     @Override
@@ -66,8 +57,8 @@ public class Menu extends GameScene implements SceneMethods {
     }
 
     private void drawFlags(Graphics g) {
-        g.drawImage(LoadSave.getFlagImage("British.jpg"), bEng.x, bEng.y, bEng.width, bEng.height, null);
-        g.drawImage(LoadSave.getFlagImage("Russian.jpg"), bRus.x, bRus.y, bRus.width, bRus.height, null);
+        g.drawImage(LoadSave.getSpriteAtlas().getSubimage(9 * 32, 3 * 32, 32, 32), bEng.x, bEng.y, bEng.width, bEng.height, null);
+        g.drawImage(LoadSave.getSpriteAtlas().getSubimage(8 * 32, 3 * 32, 32, 32), bRus.x, bRus.y, bRus.width, bRus.height, null);
     }
 
     protected void drawButtonFeedback(Graphics g, MyButton b) {
@@ -87,18 +78,19 @@ public class Menu extends GameScene implements SceneMethods {
     @Override
     public void mouseClicked(int x, int y) {
         if (bPlaying.getBounds().contains(x, y)) {
-            getGame().getPlaying().getActionBar().setLangTexts();
             getGame().getPlaying().getActionBar().setButtonText();
+            getGame().getGameOver().buttonsSetText();
             SetGameState(PLAYING);
         } else if (bEdit.getBounds().contains(x, y)) {
+            getGame().getEditor().getToolBar().setButtonText();
             SetGameState(EDIT);
         } else if (bSettings.getBounds().contains(x, y)) {
             SetGameState(SETTINGS);
         } else if (bEng.getBounds().contains(x, y)) {
-            SetLangState(ENGLISH);
+            LoadSave.setLanguage(ENGLISH);
             buttonsSetText();
         } else if (bRus.getBounds().contains(x, y)) {
-            SetLangState(RUSSIAN);
+            LoadSave.setLanguage(RUSSIAN);
             buttonsSetText();
         } else if (bQuit.getBounds().contains(x, y)) {
             System.exit(0);

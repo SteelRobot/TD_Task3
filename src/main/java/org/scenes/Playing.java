@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import static org.helpers.Constants.Temp.lvlName;
 import static org.helpers.Constants.Tiles.*;
 
 public class Playing extends GameScene implements SceneMethods {
@@ -32,13 +31,15 @@ public class Playing extends GameScene implements SceneMethods {
     private PathPoint start, end;
     private Tower selectedTower;
     private int goldTick;
-    private boolean gamePaused = false;
+    private boolean gamePaused;
 
 
     public Playing(Game game) {
         super(game);
 
         loadDefaultLevel();
+
+        gamePaused = false;
 
         actionBar = new ActionBar(0, 640, 640, 160, this);
 
@@ -49,8 +50,8 @@ public class Playing extends GameScene implements SceneMethods {
     }
 
     private void loadDefaultLevel() {
-        lvl = LoadSave.GetLevelData(lvlName);
-        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints(lvlName);
+        lvl = LoadSave.GetLevelData();
+        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints();
         start = points.get(0);
         end = points.get(1);
     }
@@ -271,6 +272,31 @@ public class Playing extends GameScene implements SceneMethods {
         return waveManager;
     }
 
-    public boolean isGamePaused() {return gamePaused;}
-    public ActionBar getActionBar() {return actionBar;}
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
+
+    public ActionBar getActionBar() {
+        return actionBar;
+    }
+
+    public void removeOneLife() {
+        actionBar.removeOneLife();
+    }
+
+    public void resetAll() {
+        actionBar.resetAll();
+
+        enemyManager.reset();
+        towerManager.reset();
+        projectileManager.reset();
+        waveManager.reset();
+
+        mouseX = 0;
+        mouseY = 0;
+
+        selectedTower = null;
+        goldTick = 0;
+        gamePaused = false;
+    }
 }

@@ -7,14 +7,14 @@ import static org.helpers.Constants.Towers.*;
 public class Tower {
     private int x, y, id, towerType, cdTick, dmg, tier;
     private float range, cooldown;
-    private boolean side = false; //false - лево, true - право
+    private boolean side;
 
-    public Tower(int x, int y, int id, int towerType, boolean side) {
+    public Tower(int x, int y, int id, int towerType) {
         this.x = x;
         this.y = y;
         this.id = id;
         this.towerType = towerType;
-        this.side = side;
+        this.side = false; //false - лево, true - право
         tier = 1;
         setDefaultDamage();
         setDefaultRange();

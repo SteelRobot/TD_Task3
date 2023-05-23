@@ -1,16 +1,33 @@
 package org.helpers;
 
+import org.main.LangStates;
 import org.objects.PathPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
-import static org.helpers.Constants.Temp.lvlName;
+import static org.main.LangStates.*;
 
 public class LoadSave {
+
+    public static String homePath = System.getProperty("user.home");
+    public static String saveFolder = "TDTutorial";
+    public static String levelFileName = "level.txt";
+    public static String langFileName = "language.txt";
+    public static String filePath = homePath + File.separator + saveFolder + File.separator;
+    public static File lvlFile = new File(filePath + levelFileName);
+    public static File langFile = new File(filePath + langFileName);
+
+
+    public static void CreateFolder() {
+        File folder = new File(homePath + File.separator + saveFolder);
+        if (!folder.exists())
+            folder.mkdir();
+    }
 
     public static BufferedImage getSpriteAtlas() {
         // Достаёт из папки resources png со всеми спрайтами
@@ -24,40 +41,27 @@ public class LoadSave {
 
         return img;
     }
-    public static BufferedImage getFlagImage(String name) {
-        // Достаёт из папки resources флаги
-        BufferedImage img = null;
-        InputStream is = LoadSave.class.getClassLoader().getResourceAsStream(name);
-        try {
-            img = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return img;
-    }
 
 
-    public static void CreateLevel(String name, int[] idArr) {
+    public static void CreateLevel(int[] idArr) {
         //Создаёт новый уровень с названием. Если уже существует, то ничего не делает
-        File newLevel = new File("src/main/resources/" + lvlName + ".txt");
-        if (newLevel.exists()) {
-            System.out.println("Файл: " + lvlName + " существует");
+        if (lvlFile.exists()) {
+            System.out.println("Файл: " + lvlFile + " существует");
         } else {
             try {
-                newLevel.createNewFile();
+                lvlFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            WriteToFile(newLevel, idArr, new PathPoint(0, 0), new PathPoint(0, 0));
+            WriteToFile(idArr, new PathPoint(0, 0), new PathPoint(0, 0));
         }
     }
 
-    private static void WriteToFile(File f, int[] idArr, PathPoint start, PathPoint end) {
+    private static void WriteToFile(int[] idArr, PathPoint start, PathPoint end) {
         //Записывает в файл ID каждой клетки, а также позицию появляения врагов и позицию базы
         // (4 значения в конце, для каждой координаты)
         try {
-            PrintWriter pw = new PrintWriter(f);
+            PrintWriter pw = new PrintWriter(lvlFile);
 
             for (int i : idArr)
                 pw.println(i);
@@ -72,17 +76,19 @@ public class LoadSave {
         }
     }
 
-    public static void SaveLevel(String name, int[][] idArr, PathPoint start, PathPoint end) {
+    public static void SaveLevel(int[][] idArr, PathPoint start, PathPoint end) {
         //Сохраняет уровень при нажатии на кнопку "Сохранить"
-        File levelFile = new File("src/main/resources/" + lvlName + ".txt");
-        WriteToFile(levelFile, Utils.TwoDToIntArr(idArr), start, end);
+        if (lvlFile.exists())
+            WriteToFile(Utils.TwoDToIntArr(idArr), start, end);
+        else
+            System.out.println("Файла не существует.");
     }
 
-    private static ArrayList<Integer> ReadFromFile(File file) {
+    private static ArrayList<Integer> ReadFromFile() {
         //Считывает информацию из txt файла уровня
         ArrayList<Integer> list = new ArrayList<>();
         try {
-            Scanner sc = new Scanner(file);
+            Scanner sc = new Scanner(lvlFile);
 
             while (sc.hasNextLine()) {
                 list.add(Integer.parseInt(sc.nextLine()));
@@ -95,12 +101,10 @@ public class LoadSave {
         return list;
     }
 
-    public static ArrayList<PathPoint> GetLevelPathPoints(String name) {
+    public static ArrayList<PathPoint> GetLevelPathPoints() {
         //Находит координаты появления врагов и базы
-        File lvlFile = new File("src/main/resources/" + lvlName + ".txt");
-
         if (lvlFile.exists()) {
-            ArrayList<Integer> list = ReadFromFile(lvlFile);
+            ArrayList<Integer> list = ReadFromFile();
             ArrayList<PathPoint> points = new ArrayList<>();
             points.add(new PathPoint(list.get(400), list.get(401)));
             points.add(new PathPoint(list.get(402), list.get(403)));
@@ -112,16 +116,61 @@ public class LoadSave {
         }
     }
 
-    public static int[][] GetLevelData(String name) {
+    public static int[][] GetLevelData() {
         //Считывает данные каждой клетки из txt файла
-        File lvlFile = new File("src/main/resources/" + lvlName + ".txt");
 
         if (lvlFile.exists()) {
-            ArrayList<Integer> list = ReadFromFile(lvlFile);
+            ArrayList<Integer> list = ReadFromFile();
             return Utils.ArrayListTo2Dint(list, 20, 20);
         } else {
             System.out.println("Файла не существует");
             return null;
+        }
+    }
+
+    public static void CreateLanguageFile() {
+        if (!langFile.exists()) {
+            try {
+                PrintWriter pw = new PrintWriter(langFile);
+
+                pw.println("RUSSIAN");
+
+                pw.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else getLanguageFromFile();
+    }
+
+    public static void setLanguage(LangStates lang) {
+        try {
+            new PrintWriter(langFile).close();
+            PrintWriter pw = new PrintWriter(langFile);
+            switch (lang) {
+                case RUSSIAN -> pw.println("RUSSIAN");
+                case ENGLISH -> pw.println("ENGLISH");
+            }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        getLanguageFromFile();
+    }
+
+    public static void getLanguageFromFile() {
+        try {
+            Scanner sc = new Scanner(langFile);
+            String lang = sc.nextLine();
+            if (Objects.equals(lang, "RUSSIAN"))
+                SetLangState(RUSSIAN);
+            else if (Objects.equals(lang, "ENGLISH"))
+                SetLangState(ENGLISH);
+            else
+                setLanguage(RUSSIAN);
+
+            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

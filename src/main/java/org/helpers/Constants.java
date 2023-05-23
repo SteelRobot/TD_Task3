@@ -1,13 +1,9 @@
 package org.helpers;
 
 
-import static org.main.LangStates.*;
+import static org.main.langTexts.*;
 
 public class Constants {
-
-    public static class Temp {
-        public static final String lvlName = "New Level";
-    }
 
     public static class Direction {
         public static final int LEFT = 0;
@@ -88,21 +84,12 @@ public class Constants {
 
 
         public static String getName(int towerType) {
-            if (langState == RUSSIAN)
-                return switch (towerType) {
-                    case CANNON -> "Пушка!!";
-                    case ARCHER -> "Лучник";
-                    case WIZARD -> "Чародей";
-                    default -> "";
-                };
-            else if (langState == ENGLISH)
-                return switch (towerType) {
-                    case CANNON -> "Cannon";
-                    case ARCHER -> "Archer";
-                    case WIZARD -> "Wizard";
-                    default -> "";
-                };
-            return "";
+            return switch (towerType) {
+                case CANNON -> cannon.toString();
+                case ARCHER -> archer.toString();
+                case WIZARD -> wizard.toString();
+                default -> "";
+            };
         }
 
         public static int getTowerCost(int towerType) {

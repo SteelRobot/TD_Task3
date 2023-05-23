@@ -1,6 +1,5 @@
 package org.enemies;
 
-import org.helpers.Constants;
 import org.managers.EnemyManager;
 
 import static org.helpers.Constants.Enemies.BOAR;
