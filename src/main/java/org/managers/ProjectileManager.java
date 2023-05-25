@@ -3,6 +3,7 @@ package org.managers;
 import org.enemies.Enemy;
 import org.helpers.Constants;
 import org.helpers.LoadSave;
+import org.helpers.Utils;
 import org.objects.Projectile;
 import org.objects.Tower;
 import org.scenes.Playing;
@@ -120,14 +121,14 @@ public class ProjectileManager {
         //Урон по площади
         for (Enemy e : playing.getEnemyManager().getEnemies()) {
             if (e.isAlive()) {
-                float radius = 40.0f;
+                float radius = 30.0f;
 
                 float xDist = Math.abs(p.getPos().x - e.getX());
                 float yDist = Math.abs(p.getPos().y - e.getY());
                 float realDist = (float) Math.hypot(xDist, yDist);
 
                 if (realDist <= radius)
-                    e.hurt(p.getDmg());
+                    e.hurt((int) (p.getDmg() * (1 - (realDist / radius))));
             }
         }
     }
@@ -137,7 +138,7 @@ public class ProjectileManager {
             if (e.isAlive())
                 if (e.getBounds().contains(p.getPos())) {
                     e.hurt(p.getDmg());
-                    if (p.getProjectileType() == CHAINS)
+                    if (p.getProjectileType() == MAGIC)
                         e.slow();
                     return true;
                 }
@@ -183,7 +184,7 @@ public class ProjectileManager {
         return switch (t.getTowerType()) {
             case ARCHER -> ARROW;
             case CANNON -> BOMB;
-            case WIZARD -> CHAINS;
+            case WIZARD -> MAGIC;
             default -> 0;
         };
     }

@@ -1,8 +1,6 @@
 package org.helpers;
 
 
-import java.util.ArrayList;
-
 import static org.main.langTexts.*;
 
 public class Constants {
@@ -22,9 +20,9 @@ public class Constants {
 
         public static int getAward(int enemyType) {
             return switch (enemyType) {
-                case GOLEM -> 5;
-                case SLIME -> 25;
-                case BOAR -> 5;
+                case GOLEM -> 20;
+                case SLIME -> 5;
+                case BOAR -> 15;
                 case GOBLIN -> 10;
                 default -> 0;
             };
@@ -32,9 +30,9 @@ public class Constants {
 
         public static float getSpeed(int enemyType) {
             return switch (enemyType) {
-                case GOLEM -> 0.5f;
-                case SLIME -> 0.65f;
-                case BOAR -> 0.3f;
+                case GOLEM -> 0.3f;
+                case SLIME -> 0.85f;
+                case BOAR -> 0.4f;
                 case GOBLIN -> 0.75f;
                 default -> 0;
 
@@ -43,10 +41,10 @@ public class Constants {
 
         public static int getStartHealth(int enemyType) {
             return switch (enemyType) {
-                case GOLEM -> 100;
+                case GOLEM -> 250;
                 case SLIME -> 40;
-                case BOAR -> 250;
-                case GOBLIN -> 85;
+                case BOAR -> 125;
+                case GOBLIN -> 50;
                 default -> 0;
             };
         }
@@ -68,16 +66,16 @@ public class Constants {
 
         public static float getStartRange(int towerType) {
             return switch (towerType) {
-                case CANNON -> 50;
+                case CANNON -> 75;
                 case ARCHER -> 100;
-                case WIZARD -> 75;
+                case WIZARD -> 100;
                 default -> 0;
             };
         }
 
         public static float getDefaultCooldown(int towerType) {
             return switch (towerType) {
-                case CANNON -> 120;
+                case CANNON -> 100;
                 case ARCHER -> 40;
                 case WIZARD -> 35;
                 default -> 0;
@@ -112,14 +110,14 @@ public class Constants {
 
     public static class Projectiles {
         public static final int ARROW = 0;
-        public static final int CHAINS = 1;
+        public static final int MAGIC = 1;
         public static final int BOMB = 2;
 
         public static float getSpeed(int type) {
             return switch (type) {
                 case ARROW -> 8f;
                 case BOMB -> 4f;
-                case CHAINS -> 6f;
+                case MAGIC -> 6f;
                 default -> 0f;
             };
         }

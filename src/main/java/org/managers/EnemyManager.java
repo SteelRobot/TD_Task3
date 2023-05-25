@@ -61,13 +61,11 @@ public class EnemyManager {
     public void update() {
 
         for (Enemy e : enemies)
-            if (e.isAlive()) {
-//                updateEnemyMove(e);
-                updateEnemyMoveNew(e);
-            }
+            if (e.isAlive())
+                updateEnemyMove(e);
     }
 
-    private void updateEnemyMoveNew(Enemy e) {
+    private void updateEnemyMove(Enemy e) {
         PathPoint currTile = getEnemyTile(e);
 
         int dir = roadDirArr[currTile.getyCord()][currTile.getxCord()];
@@ -101,93 +99,6 @@ public class EnemyManager {
         if (currTile.getxCord() == newTile.getxCord())
             return currTile.getyCord() == newTile.getyCord();
         return false;
-    }
-
-
-    public void updateEnemyMove(Enemy e) {
-        //Двигает если есть куда двигаться, а если стоит на базе, то стоит и ну короче -жизни
-        if (e.getLastDir() == -1)
-            setNewDirectionAndMove(e);
-
-        int newX = (int) (e.getX() + getSpeedAndWidth(e.getLastDir(), e.getEnemyType()));
-        int newY = (int) (e.getY() + getSpeedAndHeight(e.getLastDir(), e.getEnemyType()));
-
-        if (getTileType(newX, newY) == ROAD_TILE) {
-            e.move(getSpeed(e.getEnemyType()), e.getLastDir());
-        } else if (isAtEnd(e)) {
-            e.kill();
-            playing.removeOneLife();
-        } else {
-            setNewDirectionAndMove(e);
-        }
-    }
-
-    private void setNewDirectionAndMove(Enemy e) {
-        //Говорит куда идти в самый начальный момент появления
-        int dir = e.getLastDir();
-
-        int xCord = (int) (e.getX() / 32);
-        int yCord = (int) (e.getY() / 32);
-
-        fixEnemyOffsetTile(e, dir, xCord, yCord);
-
-        if (isAtEnd(e))
-            return;
-
-        if (dir == LEFT || dir == RIGHT) {
-            int newY = (int) (e.getY() + getSpeedAndHeight(UP, e.getEnemyType()));
-            if (getTileType((int) e.getX(), newY) == ROAD_TILE)
-                e.move(getSpeed(e.getEnemyType()), UP);
-            else
-                e.move(getSpeed(e.getEnemyType()), DOWN);
-        } else {
-            int newX = (int) (e.getX() + getSpeedAndWidth(RIGHT, e.getEnemyType()));
-            if (getTileType(newX, (int) e.getY()) == ROAD_TILE)
-                e.move(getSpeed(e.getEnemyType()), RIGHT);
-            else
-                e.move(getSpeed(e.getEnemyType()), LEFT);
-        }
-    }
-
-    private void fixEnemyOffsetTile(Enemy e, int dir, int xCord, int yCord) {
-        //Чинит всякие оффсеты, если враг спавнится слева или сверху от дороги
-        switch (dir) {
-            case RIGHT -> {
-                if (xCord < 19)
-                    xCord++;
-            }
-            case DOWN -> {
-                if (yCord < 19)
-                    yCord++;
-            }
-        }
-        e.setPos(xCord * 32, yCord * 32);
-    }
-
-    private boolean isAtEnd(Enemy e) {
-        return e.getX() == end.getxCord() * 32 && e.getY() == end.getyCord() * 32;
-    }
-
-    private int getTileType(int x, int y) {
-        return playing.getTileType(x, y);
-    }
-
-    private float getSpeedAndHeight(int dir, int enemyType) {
-        if (dir == UP) {
-            return -getSpeed(enemyType);
-        } else if (dir == DOWN) {
-            return getSpeed(enemyType) + 32;
-        }
-        return 0;
-    }
-
-    private float getSpeedAndWidth(int dir, int enemyType) {
-        if (dir == LEFT) {
-            return -getSpeed(enemyType);
-        } else if (dir == RIGHT) {
-            return getSpeed(enemyType) + 32;
-        }
-        return 0;
     }
 
     public void spawnEnemy(int nextEnemy) {
