@@ -15,7 +15,7 @@ import static org.main.LangStates.*;
 public class LoadSave {
 
     public static String homePath = System.getProperty("user.home");
-    public static String saveFolder = "TDTutorial";
+    public static String saveFolder = "TDSaveFiles";
     public static String levelFileName = "level.txt";
     public static String langFileName = "language.txt";
     public static String filePath = homePath + File.separator + saveFolder + File.separator;
@@ -160,6 +160,11 @@ public class LoadSave {
     public static void getLanguageFromFile() {
         try {
             Scanner sc = new Scanner(langFile);
+            if (!sc.hasNext()) {
+                setLanguage(RUSSIAN);
+                sc.close();
+                return;
+            }
             String lang = sc.nextLine();
             if (Objects.equals(lang, "RUSSIAN"))
                 SetLangState(RUSSIAN);

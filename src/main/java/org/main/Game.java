@@ -2,6 +2,7 @@ package org.main;
 
 import org.helpers.LoadSave;
 import org.managers.TileManager;
+import org.managers.TowerManager;
 import org.scenes.*;
 
 import javax.swing.*;
@@ -18,9 +19,9 @@ public class Game extends JFrame implements Runnable {
     private Render render;
     private Menu menu;
     private Playing playing;
-    private Settings settings;
     private Editing editing;
     private GameOver gameOver;
+    private GameWin gameWin;
 
     private TileManager tileManager;
 
@@ -47,9 +48,9 @@ public class Game extends JFrame implements Runnable {
         gameScreen = new GameScreen(this);
         menu = new Menu(this);
         playing = new Playing(this);
-        settings = new Settings(this);
         editing = new Editing(this);
         gameOver = new GameOver(this);
+        gameWin = new GameWin(this);
     }
 
     private void createDefaultLevel() {
@@ -76,10 +77,6 @@ public class Game extends JFrame implements Runnable {
         //Для обновления важных данных
         switch (GameStates.gameState) {
             case PLAYING -> playing.update();
-            case MENU -> {
-            }
-            case SETTINGS -> {
-            }
             case EDIT -> editing.update();
         }
     }
@@ -134,10 +131,6 @@ public class Game extends JFrame implements Runnable {
         return menu;
     }
 
-    public Settings getSettings() {
-        return settings;
-    }
-
     public Playing getPlaying() {
         return playing;
     }
@@ -151,6 +144,10 @@ public class Game extends JFrame implements Runnable {
     }
     public GameOver getGameOver() {
         return gameOver;
+    }
+
+    public GameWin getGameWin() {
+        return gameWin;
     }
 }
 

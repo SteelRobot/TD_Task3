@@ -31,11 +31,12 @@ public class Editing extends GameScene implements SceneMethods {
         toolBar = new ToolBar(0, 640, 640, 160, this);
     }
 
-    private void loadDefaultLevel() {
+    public void loadDefaultLevel() {
         lvl = LoadSave.GetLevelData();
         ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints();
         start = points.get(0);
         end = points.get(1);
+        getGame().getPlaying().getEnemyManager().setStartAndEndPoints(start, end);
     }
 
     public void update() {

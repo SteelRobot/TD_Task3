@@ -2,7 +2,7 @@ package org.main;
 
 public enum GameStates {
 //Перечисление всех состояний программы
-    PLAYING, MENU, SETTINGS, EDIT, GAME_OVER;
+    PLAYING, MENU, EDIT, GAME_OVER, GAME_WIN;
 
     public static GameStates gameState = MENU;
 

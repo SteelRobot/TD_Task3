@@ -17,6 +17,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import static org.helpers.Constants.Tiles.*;
+import static org.main.GameStates.GAME_WIN;
+import static org.main.GameStates.SetGameState;
 
 public class Playing extends GameScene implements SceneMethods {
 
@@ -77,6 +79,8 @@ public class Playing extends GameScene implements SceneMethods {
                         enemyManager.getEnemies().clear();
                         waveManager.resetEnemyIndex();
                     }
+                } else {
+                    SetGameState(GAME_WIN);
                 }
             }
 

@@ -11,7 +11,7 @@ import static org.main.LangStates.*;
 import static org.main.langTexts.*;
 
 public class Menu extends GameScene implements SceneMethods {
-    private MyButton bPlaying, bSettings, bQuit, bEdit, bEng, bRus;
+    private MyButton bPlaying, bQuit, bEdit, bEng, bRus;
 
     public Menu(Game game) {
         super(game);
@@ -26,8 +26,7 @@ public class Menu extends GameScene implements SceneMethods {
         int yOffset = 100;
         bPlaying = new MyButton(bPlayingStr.toString(), x, y, w, h);
         bEdit = new MyButton(bEditStr.toString(), x, y + yOffset, w, h);
-        bSettings = new MyButton(bSettingsStr.toString(), x, y + yOffset * 2, w, h);
-        bQuit = new MyButton(bQuitStr.toString(), x, y + yOffset * 3, w, h);
+        bQuit = new MyButton(bQuitStr.toString(), x, y + yOffset * 2, w, h);
         bEng = new MyButton("", 245, 25, 50, 50);
         bRus = new MyButton("", 345, 25, 50, 50);
     }
@@ -35,7 +34,6 @@ public class Menu extends GameScene implements SceneMethods {
     private void buttonsSetText() {
         bPlaying.setText(bPlayingStr.toString());
         bEdit.setText(bEditStr.toString());
-        bSettings.setText(bSettingsStr.toString());
         bQuit.setText(bQuitStr.toString());
     }
 
@@ -47,7 +45,6 @@ public class Menu extends GameScene implements SceneMethods {
     private void drawButtons(Graphics g) {
         bPlaying.draw(g);
         bEdit.draw(g);
-        bSettings.draw(g);
         bQuit.draw(g);
 
         drawFlags(g);
@@ -84,8 +81,6 @@ public class Menu extends GameScene implements SceneMethods {
         } else if (bEdit.getBounds().contains(x, y)) {
             getGame().getEditor().getToolBar().setButtonText();
             SetGameState(EDIT);
-        } else if (bSettings.getBounds().contains(x, y)) {
-            SetGameState(SETTINGS);
         } else if (bEng.getBounds().contains(x, y)) {
             LoadSave.setLanguage(ENGLISH);
             buttonsSetText();
@@ -101,7 +96,6 @@ public class Menu extends GameScene implements SceneMethods {
     public void mouseMoved(int x, int y) {
         bPlaying.setMouseOver(false);
         bEdit.setMouseOver(false);
-        bSettings.setMouseOver(false);
         bQuit.setMouseOver(false);
         bEng.setMouseOver(false);
         bRus.setMouseOver(false);
@@ -109,8 +103,6 @@ public class Menu extends GameScene implements SceneMethods {
             bPlaying.setMouseOver(true);
         } else if (bEdit.getBounds().contains(x, y)) {
             bEdit.setMouseOver(true);
-        } else if (bSettings.getBounds().contains(x, y)) {
-            bSettings.setMouseOver(true);
         } else if (bEng.getBounds().contains(x, y)) {
             bEng.setMouseOver(true);
         } else if (bRus.getBounds().contains(x, y)) {
@@ -126,8 +118,6 @@ public class Menu extends GameScene implements SceneMethods {
             bPlaying.setMousePressed(true);
         } else if (bEdit.getBounds().contains(x, y)) {
             bEdit.setMousePressed(true);
-        } else if (bSettings.getBounds().contains(x, y)) {
-            bSettings.setMousePressed(true);
         } else if (bEng.getBounds().contains(x, y)) {
             bEng.setMousePressed(true);
         } else if (bRus.getBounds().contains(x, y)) {
@@ -150,7 +140,6 @@ public class Menu extends GameScene implements SceneMethods {
     private void resetButtons() {
         bPlaying.resetBooleans();
         bEdit.resetBooleans();
-        bSettings.resetBooleans();
         bQuit.resetBooleans();
         bEng.resetBooleans();
         bRus.resetBooleans();

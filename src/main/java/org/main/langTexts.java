@@ -4,14 +4,19 @@ import static org.main.LangStates.*;
 
 public enum langTexts {
     bMenuStr("Меню", "Menu"), bPlayingStr("Играть", "Play"), bEditStr("Редактор", "Editor"),
-    bSettingsStr("Настройки", "Settings"), bQuitStr("Выход", "Quit"), bReplayStr("Заново", "Replay"), bPauseStr("Пауза", "Pause"),
+    bQuitStr("Выход", "Quit"), bReplayStr("Заново", "Replay"), bPauseStr("Пауза", "Pause"),
     bUnpauseStr("Продолжить", "Unpause"), bSaveStr("Сохранить", "Save"),
-    bSellStr("Продать", "Sell"), bUpgradeStr("Улучшить", "Upgrade"), pauseStr("НА ПАУЗЕ", "PAUSED"),
-    noMoneyStr("Нет денег", "No money"), costStr("Цена: ", "Cost: "), moneyCountStr("Денег: ", "Money: "),
+    bSellStr("Продать", "Sell"), bUpgradeStr("Улучшить", "Upgrade"),
+    pauseStr("НА ПАУЗЕ", "PAUSED"),
+    noMoneyStr("Нет денег", "No money"), costStr("Цена: ", "Cost: "),
+    moneyCountStr("Денег: ", "Money: "),
     waveStr("Волна ", "Wave "), enemyCountStr("Врагов осталось: ", "Enemies left: "),
-    timeCounterStr("Времени: ", "Time til wave: "), currencyStr("р", "g"), upgradeLevelStr("Уровень: ", "Level: "),
-    gameOverStr("Игра окончена", "Game Over!"), livesStr("Жизни: ", "Lives: "), archer("Лучник", "Archer"),
-    cannon("Пушка!!", "Cannon"), wizard("Маг", "Wizard");
+    timeCounterStr("Времени: ", "Time til wave: "), currencyStr("р", "g"),
+    upgradeLevelStr("Уровень: ", "Level: "),
+    gameOverStr("Игра окончена", "Game Over!"), gameWinStr("Победа", "Victory!"),
+    livesStr("Жизни: ", "Lives: "), archer("Лучник", "Archer"),
+    cannon("Пушка!!", "Cannon"), wizard("Маг", "Wizard"),
+    ;
 
 
     langTexts(String ru, String en) {

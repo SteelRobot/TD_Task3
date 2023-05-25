@@ -256,4 +256,9 @@ public class EnemyManager {
     public void reset() {
         enemies.clear();
     }
+
+    public void setStartAndEndPoints(PathPoint start, PathPoint end) {
+        this.start = start;
+        this.end = end;
+    }
 }

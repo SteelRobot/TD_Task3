@@ -58,8 +58,8 @@ public class ToolBar extends Bar {
         int xOffset = (int) (w * 1.1f);
         int i = 0;
 
-        bGrass = new MyButton("Grass", xStart, yStart, w, h, i++);
-        bWater = new MyButton("Water", xStart + xOffset, yStart, w, h, i++);
+        bGrass = new MyButton("", xStart, yStart, w, h, i++);
+        bWater = new MyButton("", xStart + xOffset, yStart, w, h, i++);
 
         //Тут, короче, есть всего 5 кнопок для вращаемых плиток, и у каждой кнопки присвоено значение ArrayList<Tile>
         //Нужно для вращения, вот
@@ -68,8 +68,8 @@ public class ToolBar extends Bar {
         initMapButton(bWaterC, editing.getGame().getTileManager().getCorners(), xStart, yStart, xOffset, w, h, i++);
         initMapButton(bWaterb, editing.getGame().getTileManager().getBeaches(), xStart, yStart, xOffset, w, h, i++);
         initMapButton(bWaterI, editing.getGame().getTileManager().getIslands(), xStart, yStart, xOffset, w, h, i++);
-        bPathStart = new MyButton("PathStart", xStart, yStart + xOffset, w, h, i++);
-        bPathEnd = new MyButton("PathStart", xStart + xOffset, yStart + xOffset, w, h, i++);
+        bPathStart = new MyButton("", xStart, yStart + xOffset, w, h, i++);
+        bPathEnd = new MyButton("", xStart + xOffset, yStart + xOffset, w, h, i++);
 
     }
 
@@ -161,6 +161,7 @@ public class ToolBar extends Bar {
             saveLevel();
             editing.getGame().getPlaying().resetAll();
             editing.getGame().getPlaying().getEnemyManager().loadRoadDirArr();
+            editing.loadDefaultLevel();
         } else if (bWater.getBounds().contains(x, y)) {
             selectedTile = editing.getGame().getTileManager().getTile(bWater.getId());
             editing.setSelectedTile(selectedTile);

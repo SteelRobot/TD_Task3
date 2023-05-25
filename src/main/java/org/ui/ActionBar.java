@@ -77,8 +77,10 @@ public class ActionBar extends Bar {
 
     public void removeOneLife() {
         lives--;
-        if (lives <= 0)
+        if (lives <= 0) {
             SetGameState(GAME_OVER);
+        }
+
     }
 
     public void setButtonText() {
@@ -153,7 +155,7 @@ public class ActionBar extends Bar {
     }
 
     private void drawWaveInfo(Graphics g) {
-        g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+        g.setFont(new Font("LucidaSans", Font.BOLD, 20));
         drawWaveTimerInfo(g);
         drawEnemiesLeftInfo(g);
         drawWaveLeftInfo(g);
@@ -195,7 +197,7 @@ public class ActionBar extends Bar {
             g.drawRect(410, 645, 220, 85);
             g.drawRect(420, 650, 50, 50);
             g.drawImage(playing.getTowerManager().getTowerImgs()[displayedTower.getTowerType()], 420, 650, 50, 50, null);
-            g.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+            g.setFont(new Font("LucidaSans", Font.BOLD, 15));
             g.drawString(Constants.Towers.getName(displayedTower.getTowerType()), 480, 660);
             g.drawString("ID: " + displayedTower.getId(), 480, 675);
             g.drawString(upgradeLevelStr.toString() + displayedTower.getTier(), 540, 660);
@@ -233,7 +235,7 @@ public class ActionBar extends Bar {
     }
 
     private void drawDisplayedTowerBorder(Graphics g) {
-        //Рисует вон ту кривую картинку выделения
+        //Рисует вон ту картинку выделения башни
         g.drawImage(selectedTowerBorder, displayedTower.getX(), displayedTower.getY(), null);
     }
 
@@ -387,9 +389,5 @@ public class ActionBar extends Bar {
 
     public void addGold(int award) {
         this.gold += award;
-    }
-
-    public int getLives() {
-        return lives;
     }
 }

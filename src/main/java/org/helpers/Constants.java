@@ -1,6 +1,8 @@
 package org.helpers;
 
 
+import java.util.ArrayList;
+
 import static org.main.langTexts.*;
 
 public class Constants {
@@ -57,7 +59,7 @@ public class Constants {
 
         public static int getStartDamage(int towerType) {
             return switch (towerType) {
-                case CANNON -> 15;
+                case CANNON -> 20;
                 case ARCHER -> 5;
                 case WIZARD -> 2;
                 default -> 0;
@@ -66,9 +68,9 @@ public class Constants {
 
         public static float getStartRange(int towerType) {
             return switch (towerType) {
-                case CANNON -> 100;
+                case CANNON -> 50;
                 case ARCHER -> 100;
-                case WIZARD -> 100;
+                case WIZARD -> 75;
                 default -> 0;
             };
         }
@@ -76,8 +78,8 @@ public class Constants {
         public static float getDefaultCooldown(int towerType) {
             return switch (towerType) {
                 case CANNON -> 120;
-                case ARCHER -> 25;
-                case WIZARD -> 40;
+                case ARCHER -> 40;
+                case WIZARD -> 35;
                 default -> 0;
             };
         }

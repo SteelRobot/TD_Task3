@@ -121,4 +121,5 @@ public abstract class Enemy {
     public void setLastDir(int newDir) {
         this.lastDir = newDir;
     }
+    public void setHealth(int health) {this.health = health;}
 }

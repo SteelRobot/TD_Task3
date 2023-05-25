@@ -9,11 +9,11 @@ import static org.main.GameStates.*;
 import static org.main.langTexts.*;
 
 
-public class GameOver extends GameScene implements SceneMethods {
+public class GameWin extends GameScene implements SceneMethods {
 
     private MyButton bReplay, bMenu;
 
-    public GameOver(Game game) {
+    public GameWin(Game game) {
         super(game);
 
         initButtons();
@@ -42,10 +42,10 @@ public class GameOver extends GameScene implements SceneMethods {
         bMenu.draw(g);
         bReplay.draw(g);
 
-        g.setColor(Color.RED);
+        g.setColor(Color.GREEN);
         g.setFont(new Font("Comic Sans MS", Font.BOLD, 50));
-        int w = g.getFontMetrics().stringWidth(gameOverStr.toString());
-        g.drawString(gameOverStr.toString(), 320 - w / 2, 80);
+        int w = g.getFontMetrics().stringWidth(gameWinStr.toString());
+        g.drawString(gameWinStr.toString(), 320 - w / 2, 80);
     }
 
     private void replayGame() {
