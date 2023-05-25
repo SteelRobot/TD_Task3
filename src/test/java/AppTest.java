@@ -1,13 +1,17 @@
 import org.enemies.Golem;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.main.Game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
-    private Game game = new Game();
+    private final Game game = new Game();
+    @Before
+    public void setUpHeadlessMode() {
+        System.setProperty("java.awt.headless", "true");
+    }
 
     @AfterEach
     public void tearDown() {
