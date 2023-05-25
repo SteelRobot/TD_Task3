@@ -283,6 +283,9 @@ public class Playing extends GameScene implements SceneMethods {
     public ActionBar getActionBar() {
         return actionBar;
     }
+    public ProjectileManager getProjectileManager() {
+        return projectileManager;
+    }
 
     public void removeOneLife() {
         actionBar.removeOneLife();

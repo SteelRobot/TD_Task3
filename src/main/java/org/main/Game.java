@@ -33,6 +33,7 @@ public class Game extends JFrame implements Runnable {
         initClasses();
         //Создание самого окна
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Tower Defence");
         render = new Render(this);
         gameScreen = new GameScreen(this);
         setResizable(false);

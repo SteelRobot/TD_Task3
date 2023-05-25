@@ -9,5 +9,7 @@ public class Wave {
         this.enemyList = enemyList;
     }
 
-    public ArrayList<Integer> getEnemyList() {return  enemyList;}
+    public ArrayList<Integer> getEnemyList() {
+        return enemyList;
+    }
 }

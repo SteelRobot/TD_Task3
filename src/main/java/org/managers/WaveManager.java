@@ -5,6 +5,7 @@ import org.scenes.Playing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class WaveManager {
     private Playing playing;
@@ -60,8 +61,16 @@ public class WaveManager {
     }
 
     private void createWaves() {
-        waves.add(new Wave(new ArrayList<>(Arrays.asList(0, 0, 0, 0, 1))));
-        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 0, 0, 1))));
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(0, 3, 0, 2, 1)))); //1
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 2, 3, 1, 3, 1)))); //2
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 1, 1, 1, 2, 3)))); //3
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 2, 3, 0, 1, 3, 0, 1)))); //4
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 3, 0, 1, 1, 3, 0)))); //5
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 3, 0, 1, 0, 3, 0, 1)))); //6
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 1, 0, 3, 0)))); //7
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 1, 0, 3, 1, 0, 3, 1)))); //8
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 0, 0, 2, 1, 3)))); //9
+        waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 1, 0, 1, 1, 0, 1)))); //10
     }
 
     public ArrayList<Wave> getWaves() {

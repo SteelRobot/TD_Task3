@@ -36,8 +36,8 @@ public class ActionBar extends Bar {
 
         rangeColor = new Color(1, 1, 1, .4f);
 
-        gold = 100;
-        lives = 2;
+        gold = 200;
+        lives = 25;
 
 
         initButtons();
@@ -46,8 +46,8 @@ public class ActionBar extends Bar {
     }
 
     public void resetAll() {
-        lives = 2;
-        gold = 100;
+        lives = 25;
+        gold = 200;
         towerCostType = 0;
         showTowerCost = false;
         selectedTower = null;
