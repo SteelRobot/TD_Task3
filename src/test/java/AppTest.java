@@ -5,8 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.main.Game;
 
-import java.awt.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
@@ -19,16 +17,12 @@ public class AppTest {
 
     @BeforeEach
     public void setUp() {
-        try {
-            game = new Game();
-        } catch (HeadlessException e) {
-            e.printStackTrace();
-        }
+        game = new Game();
     }
 
     @AfterEach
     public void tearDown() {
-        game.getPlaying().resetAll();
+        game.dispose();
     }
 
     @org.junit.jupiter.api.Test
