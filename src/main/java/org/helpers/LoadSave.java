@@ -45,9 +45,7 @@ public class LoadSave {
 
     public static void CreateLevel(int[] idArr) {
         //Создаёт новый уровень с названием. Если уже существует, то ничего не делает
-        if (lvlFile.exists()) {
-            System.out.println("Файл: " + lvlFile + " существует");
-        } else {
+        if (!lvlFile.exists()) {
             try {
                 lvlFile.createNewFile();
             } catch (IOException e) {
