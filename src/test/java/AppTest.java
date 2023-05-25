@@ -1,6 +1,7 @@
 import org.enemies.Golem;
 import org.junit.jupiter.api.AfterEach;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.main.Game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,8 +11,7 @@ public class AppTest {
 
     @AfterEach
     public void tearDown() {
-        game.dispose();
-        game = new Game();
+        game.getPlaying().resetAll();
     }
 
     @org.junit.jupiter.api.Test
