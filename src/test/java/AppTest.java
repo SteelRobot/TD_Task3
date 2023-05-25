@@ -8,7 +8,6 @@ import org.main.Game;
 import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 public class AppTest {
     private Game game;
