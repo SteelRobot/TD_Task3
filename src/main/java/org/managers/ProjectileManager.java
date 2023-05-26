@@ -3,7 +3,6 @@ package org.managers;
 import org.enemies.Enemy;
 import org.helpers.Constants;
 import org.helpers.LoadSave;
-import org.helpers.Utils;
 import org.objects.Projectile;
 import org.objects.Tower;
 import org.scenes.Playing;
@@ -22,7 +21,6 @@ public class ProjectileManager {
     private ArrayList<Explosion> explosions;
     private BufferedImage[] projImgs, explosionImgs;
     private int projectileID;
-    private boolean drawExplosion;
 
     public ProjectileManager(Playing playing) {
         this.playing = playing;
@@ -31,7 +29,6 @@ public class ProjectileManager {
         projectiles = new ArrayList<>();
 
         explosions = new ArrayList<>();
-        drawExplosion = false;
 
         importImgs();
     }
@@ -98,6 +95,10 @@ public class ProjectileManager {
     public void update() {
         for (Projectile p : projectiles) {
             if (p.isActive()) {
+                if (isProjectileOutsideBounds(p)) {
+                    p.setActive(false);
+                    return;
+                }
                 p.move();
                 if (isProjectileHittingEnemy(p)) {
                     p.setActive(false);
@@ -187,7 +188,7 @@ public class ProjectileManager {
         };
     }
 
-    public class Explosion {
+    public static class Explosion {
         //Подкласс для взрывов
         private Point2D.Float pos;
         private int explosionTick = 0, explosionIndex = 0;

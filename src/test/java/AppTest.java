@@ -1,28 +1,25 @@
 import org.enemies.Golem;
-import org.junit.Before;
-import org.junit.jupiter.api.AfterEach;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.main.Game;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTest {
     private Game game;
 
-    @Before
-    public void setUpHeadlessMode() {
-        System.setProperty("java.awt.headless", "true");
-    }
-
     @BeforeEach
     public void setUp() {
+        System.setProperty("java.awt.headless", "true");
         game = new Game();
     }
 
-    @AfterEach
-    public void tearDown() {
-        game.dispose();
+    @org.junit.jupiter.api.Test
+    public void whenSetUpSuccessful_thenHeadlessIsTrue() {
+        assertTrue(GraphicsEnvironment.isHeadless());
     }
 
     @org.junit.jupiter.api.Test

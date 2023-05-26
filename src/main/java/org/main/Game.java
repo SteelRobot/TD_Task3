@@ -2,12 +2,14 @@ package org.main;
 
 import org.helpers.LoadSave;
 import org.managers.TileManager;
-import org.managers.TowerManager;
 import org.scenes.*;
+import org.scenes.Menu;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class Game extends JFrame implements Runnable {
+public class Game implements Runnable {
+    private JFrame frame;
 
     private GameScreen gameScreen;
     private Thread gameThread;
@@ -32,15 +34,16 @@ public class Game extends JFrame implements Runnable {
         setLanguage();
         initClasses();
         //Создание самого окна
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Tower Defence");
-        render = new Render(this);
-        gameScreen = new GameScreen(this);
-        setResizable(false);
-        add(gameScreen);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        if (!GraphicsEnvironment.isHeadless()) {
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setTitle("Tower Defence");
+            frame.setResizable(false);
+            frame.add(gameScreen);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        }
     }
 
     private void initClasses() {
@@ -85,7 +88,8 @@ public class Game extends JFrame implements Runnable {
     public static void main(String[] args) {
         Game game = new Game();
         game.gameScreen.initInputs();
-        game.start();
+        if (!GraphicsEnvironment.isHeadless())
+            game.start();
     }
 
     @Override
@@ -95,32 +99,19 @@ public class Game extends JFrame implements Runnable {
 
         long lastFrame = System.nanoTime();
         long lastUpdate = System.nanoTime();
-        long lastTimeCheck = System.currentTimeMillis();
-
-        int frames = 0;
-        int updates = 0;
 
         long now;
 
         while (true) {
             now = System.nanoTime();
             if (now - lastFrame >= timePerFrame) {
-                repaint();
+                frame.repaint();
                 lastFrame = now;
-                frames++;
             }
             if (System.nanoTime() - lastUpdate >= timePerUpdate) {
                 updateGame();
                 lastUpdate = now;
-                updates++;
             }
-
-//            if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
-//                System.out.println("FPS: " + frames + " | UPS: " + updates);
-//                frames = 0;
-//                updates = 0;
-//                lastTimeCheck = System.currentTimeMillis();
-//            }
         }
     }
 
@@ -143,6 +134,7 @@ public class Game extends JFrame implements Runnable {
     public TileManager getTileManager() {
         return tileManager;
     }
+
     public GameOver getGameOver() {
         return gameOver;
     }
