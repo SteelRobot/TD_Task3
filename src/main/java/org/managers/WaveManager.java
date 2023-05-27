@@ -5,15 +5,14 @@ import org.scenes.Playing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public class WaveManager {
     private Playing playing;
     private ArrayList<Wave> waves;
-    private int enemySpawnTickLimit;
-    private int enemySpawnTick = enemySpawnTickLimit;
+    private static final int enemySpawnTickLimit = 60 * 5; //Кол-во секунд между каждым врагом
+    private int enemySpawnTick;
     private int enemyIndex, waveIndex;
-    private int waveTickLimit;
+    private static final int waveTickLimit = 60 * 5; //Кол-во секунд между волнами
     private int waveTick;
     private boolean waveStartTimer, waveTickTimerOver;
 
@@ -22,8 +21,7 @@ public class WaveManager {
 
         waves = new ArrayList<>();
 
-        enemySpawnTickLimit = 60 * 1;
-        waveTickLimit = 60 * 5; //Кол-во секунд между волнами
+        enemySpawnTick = enemySpawnTickLimit;
         waveTick = 0;
 
         createWaves();
@@ -41,7 +39,7 @@ public class WaveManager {
         }
     }
 
-    public void increaseWaveIndex() {
+    public void increaseWaveIndex() { //Переход на следущую волну
         waveIndex++;
         waveTickTimerOver = false;
         waveStartTimer = false;
@@ -55,7 +53,7 @@ public class WaveManager {
         waveStartTimer = true;
     }
 
-    public int getNextEnemy() {
+    public int getNextEnemy() { //Берёт следующего врага из списка волны
         enemySpawnTick = 0;
         return waves.get(waveIndex).getEnemyList().get(enemyIndex++);
     }
@@ -109,6 +107,7 @@ public class WaveManager {
     public void reset() {
         waves.clear();
         createWaves();
+
         enemyIndex = 0;
         waveIndex = 0;
         waveStartTimer = false;

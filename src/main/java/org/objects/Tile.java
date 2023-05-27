@@ -15,7 +15,7 @@ public class Tile {
         this.tileType = tileType;
     }
 
-    public Tile(BufferedImage[] sprite, int id, int tileType) {
+    public Tile(BufferedImage[] sprite, int id, int tileType) { //Анимированый тайл
         this.sprite = sprite;
         this.id = id;
         this.tileType = tileType;

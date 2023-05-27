@@ -36,11 +36,13 @@ public abstract class Enemy {
     }
 
     private void setStartHealth() {
+        //Выставляет начальное значение здоровья из Constants
         health = Constants.Enemies.getStartHealth(enemyType);
         maxHealth = health;
     }
 
     public void hurt(int damage) {
+        //Наносит урон. Если здоровье меньше 0, то умирает и даёт награду игроку
         this.health -= damage;
         if (health <= 0) {
             alive = false;
@@ -55,10 +57,12 @@ public abstract class Enemy {
     }
 
     public void slow() {
+        //Замедляет. Когда slowTick вернётся в значение slowTickLimit, то замедление уйдёт
         slowTick = 0;
     }
 
     public void move(float speed, int dir) {
+        //Двигается в выбранном направлении
         lastDir = dir;
 
         if (slowTick < slowTickLimit) {
@@ -121,5 +125,4 @@ public abstract class Enemy {
     public void setLastDir(int newDir) {
         this.lastDir = newDir;
     }
-    public void setHealth(int health) {this.health = health;}
 }

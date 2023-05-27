@@ -1,5 +1,6 @@
 package org.helpers;
 
+import org.main.Game;
 import org.main.LangStates;
 import org.objects.PathPoint;
 
@@ -51,8 +52,13 @@ public class LoadSave {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            WriteToFile(idArr, new PathPoint(0, 0), new PathPoint(0, 0));
+            WriteToFile(idArr, new PathPoint(0, 11), new PathPoint(19, 11));
         }
+    }
+
+    public static void ResetLevel() {
+        lvlFile.delete();
+        Game.createDefaultLevel();
     }
 
     private static void WriteToFile(int[] idArr, PathPoint start, PathPoint end) {
@@ -127,6 +133,7 @@ public class LoadSave {
     }
 
     public static void CreateLanguageFile() {
+        //Создаёт файл для записи языка
         if (!langFile.exists()) {
             try {
                 PrintWriter pw = new PrintWriter(langFile);
@@ -141,6 +148,7 @@ public class LoadSave {
     }
 
     public static void setLanguage(LangStates lang) {
+        //Записывает язык в файл
         try {
             new PrintWriter(langFile).close();
             PrintWriter pw = new PrintWriter(langFile);
@@ -156,6 +164,7 @@ public class LoadSave {
     }
 
     public static void getLanguageFromFile() {
+        //Достаёт язык из файла и меняет значение langState
         try {
             Scanner sc = new Scanner(langFile);
             if (!sc.hasNext()) {
@@ -169,7 +178,7 @@ public class LoadSave {
             else if (Objects.equals(lang, "ENGLISH"))
                 SetLangState(ENGLISH);
             else
-                setLanguage(RUSSIAN);
+                setLanguage(RUSSIAN); //Если в файле языка что-то непонятное
 
             sc.close();
         } catch (FileNotFoundException e) {

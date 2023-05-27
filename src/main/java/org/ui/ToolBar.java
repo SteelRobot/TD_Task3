@@ -1,6 +1,5 @@
 package org.ui;
 
-import org.helpers.Constants;
 import org.helpers.LoadSave;
 import org.objects.Tile;
 import org.scenes.Editing;
@@ -13,7 +12,7 @@ import java.util.Map;
 
 import static org.main.GameStates.MENU;
 import static org.main.GameStates.SetGameState;
-import static org.main.langTexts.*;
+import static org.main.LangTexts.*;
 
 public class ToolBar extends Bar {
 
@@ -97,13 +96,12 @@ public class ToolBar extends Bar {
 
         selectedTile = map.get(currentButton).get(currentIndex);
         editing.setSelectedTile(selectedTile);
-        System.out.println("aaa");
     }
 
     public void draw(Graphics g) {
-
         g.setColor(new Color(220, 123, 14));
         g.fillRect(x, y, width, height);
+
 
         drawButtons(g);
     }
@@ -119,6 +117,9 @@ public class ToolBar extends Bar {
         drawNormalButton(g, bWater);
         drawSelectedTile(g);
         drawMapButtons(g);
+
+        g.setFont(new Font("LucidaSans", Font.BOLD, 15));
+        g.drawString(rotHintStr.toString(), 110, 780);
     }
 
     private void drawPathButton(Graphics g, MyButton b, BufferedImage img) {
@@ -145,6 +146,7 @@ public class ToolBar extends Bar {
         //Просто снова рисует выбранную клетку в углу нижней панели
         if (selectedTile != null) {
             g.drawImage(selectedTile.getSprite(), 550, 650, 50, 50, null);
+            g.setColor(Color.BLACK);
             g.drawRect(550, 650, 50, 50);
         }
     }
@@ -159,9 +161,6 @@ public class ToolBar extends Bar {
             SetGameState(MENU);
         } else if (bSave.getBounds().contains(x, y)) {
             saveLevel();
-            editing.getGame().getPlaying().resetAll();
-            editing.getGame().getPlaying().getEnemyManager().loadRoadDirArr();
-            editing.loadDefaultLevel();
         } else if (bWater.getBounds().contains(x, y)) {
             selectedTile = editing.getGame().getTileManager().getTile(bWater.getId());
             editing.setSelectedTile(selectedTile);

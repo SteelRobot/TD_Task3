@@ -21,7 +21,7 @@ public class ImgFix {
     }
 
     public static BufferedImage[] getBuildRotImg(BufferedImage[] imgs, BufferedImage secondImage, int rotAngle) {
-        //Отвечает за поворот + анимацию только воды
+        //Отвечает за поворот + анимацию, только для воды
         int w = imgs[0].getWidth();
         int h = imgs[0].getHeight();
 

@@ -3,6 +3,7 @@ package org.managers;
 import org.enemies.*;
 import org.helpers.LoadSave;
 import org.helpers.Utils;
+import org.main.IncorrectLevelStructure;
 import org.objects.PathPoint;
 import org.scenes.Playing;
 
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 
 import static org.helpers.Constants.Direction.*;
 import static org.helpers.Constants.Enemies.*;
-import static org.helpers.Constants.Tiles.*;
 
 public class EnemyManager {
     private Playing playing;
@@ -38,13 +38,16 @@ public class EnemyManager {
         loadRoadDirArr();
     }
 
-    public void loadRoadDirArr() {
-        roadDirArr = Utils.GetRoadDirArr(playing.getGame().getTileManager().getTypeArr(), start, end);
-
+    public void loadRoadDirArr() { //Загружает карту уровня, но из неё берутся только тайлы с дорогами и их направление
+        try {
+            roadDirArr = Utils.GetRoadDirArr(playing.getGame().getTileManager().getTypeArr(), start, end);
+        } catch (IncorrectLevelStructure e) {
+            e.printStackTrace();
+        }
     }
 
 
-    private void loadEffectImg() {
+    private void loadEffectImg() {// Эффект заморозки
         slowEffect = LoadSave.getSpriteAtlas().getSubimage(0, 3 * 32, 32, 32);
     }
 
@@ -66,6 +69,7 @@ public class EnemyManager {
     }
 
     private void updateEnemyMove(Enemy e) {
+        //Двигает врага в соответствии с направлением на карте направлений
         PathPoint currTile = getEnemyTile(e);
 
         int dir = roadDirArr[currTile.getyCord()][currTile.getxCord()];
@@ -73,12 +77,15 @@ public class EnemyManager {
         e.move(getSpeed(e.getEnemyType()), dir);
 
         PathPoint newTile = getEnemyTile(e);
-        if (isTilesTheSame(newTile, end)) {
+
+        if (isTilesTheSame(newTile, end)) { //Наносит урон базе
             e.kill();
             playing.removeOneLife();
         }
 
         if (!isTilesTheSame(currTile, newTile)) {
+            //При перемещении в новую клетку, сравнивает направления,
+            // и если они не совпадают - выравнивает спрайт и меняет направление
             int newDir = roadDirArr[newTile.getyCord()][newTile.getxCord()];
             if (newDir != dir) {
                 e.setPos(newTile.getxCord() * 32, newTile.getyCord() * 32);
@@ -88,6 +95,8 @@ public class EnemyManager {
     }
 
     private PathPoint getEnemyTile(Enemy e) {
+        //Смотрит, на какой клетке находился враг в данный момент
+        //LEFT и UP требуют добавления 31, так как точка спрайта врага находится в _левом верхнем_ углу самого спрайта
         return switch (e.getLastDir()) {
             case LEFT -> new PathPoint((int) ((e.getX() + 31) / 32), (int) (e.getY() / 32));
             case UP -> new PathPoint((int) (e.getX() / 32), (int) ((e.getY() + 31) / 32));
@@ -106,6 +115,7 @@ public class EnemyManager {
     }
 
     public void addEnemy(int enemyType) {
+        //Создаёт новых врагов на координате начального спавна
 
         int x = start.getxCord() * 32;
         int y = start.getyCord() * 32;

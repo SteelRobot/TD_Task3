@@ -133,23 +133,19 @@ public class ProjectileManager {
     }
 
     private boolean isProjectileHittingEnemy(Projectile p) {
-        for (Enemy e : playing.getEnemyManager().getEnemies()) {
-            if (e.isAlive())
-                if (e.getBounds().contains(p.getPos())) {
-                    e.hurt(p.getDmg());
-                    if (p.getProjectileType() == MAGIC)
-                        e.slow();
-                    return true;
-                }
-        }
+        for (Enemy e : playing.getEnemyManager().getEnemies())
+            if (e.isAlive() && e.getBounds().contains(p.getPos())) {
+                e.hurt(p.getDmg());
+                if (p.getProjectileType() == MAGIC)
+                    e.slow();
+                return true;
+            }
         return false;
     }
 
     private boolean isProjectileOutsideBounds(Projectile p) {
-        if (p.getPos().x >= 0)
-            if (p.getPos().x <= 640)
-                if (p.getPos().y >= 0)
-                    return !(p.getPos().y <= 640);
+        if (p.getPos().x >= 0 && p.getPos().x <= 640)
+            return !(p.getPos().y >= 0 && p.getPos().y <= 640);
         return true;
     }
 
@@ -186,6 +182,10 @@ public class ProjectileManager {
             case WIZARD -> MAGIC;
             default -> 0;
         };
+    }
+
+    public ArrayList<Projectile> getProjectiles() {
+        return projectiles;
     }
 
     public static class Explosion {

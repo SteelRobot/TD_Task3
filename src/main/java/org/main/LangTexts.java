@@ -2,7 +2,7 @@ package org.main;
 
 import static org.main.LangStates.*;
 
-public enum langTexts {
+public enum LangTexts { //Все тексты
     bMenuStr("Меню", "Menu"), bPlayingStr("Играть", "Play"), bEditStr("Редактор", "Editor"),
     bQuitStr("Выход", "Quit"), bReplayStr("Заново", "Replay"), bPauseStr("Пауза", "Pause"),
     bUnpauseStr("Продолжить", "Unpause"), bSaveStr("Сохранить", "Save"),
@@ -16,10 +16,14 @@ public enum langTexts {
     gameOverStr("Игра окончена", "Game Over!"), gameWinStr("Победа", "Victory!"),
     livesStr("Жизни: ", "Lives: "), archer("Лучник", "Archer"),
     cannon("Пушка!!", "Cannon"), wizard("Маг", "Wizard"),
-    ;
+    rotHintStr("Нажмите \"R\" для вращения плитки", "Press \"R\" to rotate the tile"),
+    lvlWarningStr("Ваш уровень не имел одной дороги от начала до конца, что вызвало ошибки. " +
+            "Уровень был сброшен к начальному состоянию",
+            "Your level did not have a continuous path between start and exit, which caused errors. " +
+                    "The level has been reset to a default state");
 
 
-    langTexts(String ru, String en) {
+    LangTexts(String ru, String en) {
         ru_value = ru;
         en_value = en;
     }

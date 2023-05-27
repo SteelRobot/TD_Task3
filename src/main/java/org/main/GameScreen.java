@@ -5,7 +5,7 @@ import org.inputs.MyMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
-public class GameScreen extends JPanel {
+public class GameScreen extends JPanel { //JPanel, в котором будут рисоваться все состояния игры
 
     private MyMouseListener myMouseListener;
     private KeyboardListener keyboardListener;
@@ -37,7 +37,6 @@ public class GameScreen extends JPanel {
         setMinimumSize(size);
         setMaximumSize(size);
         setPreferredSize(size);
-        //Нужны для создания окна и сохранения его размера
     }
 
 

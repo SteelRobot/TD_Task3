@@ -6,7 +6,7 @@ import org.ui.MyButton;
 import java.awt.*;
 
 import static org.main.GameStates.*;
-import static org.main.langTexts.*;
+import static org.main.LangTexts.*;
 
 
 public class GameOver extends GameScene implements SceneMethods {
@@ -95,10 +95,5 @@ public class GameOver extends GameScene implements SceneMethods {
     public void mouseReleased(int x, int y) {
         bMenu.resetBooleans();
         bReplay.resetBooleans();
-    }
-
-    @Override
-    public void mouseDragged(int x, int y) {
-
     }
 }

@@ -8,7 +8,7 @@ import java.awt.*;
 
 import static org.main.GameStates.*;
 import static org.main.LangStates.*;
-import static org.main.langTexts.*;
+import static org.main.LangTexts.*;
 
 public class Menu extends GameScene implements SceneMethods {
     private MyButton bPlaying, bQuit, bEdit, bEng, bRus;
@@ -130,11 +130,6 @@ public class Menu extends GameScene implements SceneMethods {
     @Override
     public void mouseReleased(int x, int y) {
         resetButtons();
-    }
-
-    @Override
-    public void mouseDragged(int x, int y) {
-
     }
 
     private void resetButtons() {

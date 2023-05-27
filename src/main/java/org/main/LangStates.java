@@ -1,6 +1,6 @@
 package org.main;
 
-public enum LangStates {
+public enum LangStates { //Для переключения языков
     ENGLISH, RUSSIAN;
 
     public static LangStates langState = RUSSIAN;

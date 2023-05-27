@@ -17,22 +17,23 @@ public class Game implements Runnable {
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
 
-    //Classes
+    //Классы
     private Render render;
     private Menu menu;
     private Playing playing;
     private Editing editing;
     private GameOver gameOver;
     private GameWin gameWin;
-
     private TileManager tileManager;
 
     public Game() {
         LoadSave.CreateFolder();
+
         //Создание уровня
         createDefaultLevel();
         setLanguage();
         initClasses();
+
         //Создание самого окна
         if (!GraphicsEnvironment.isHeadless()) {
             frame = new JFrame();
@@ -57,11 +58,13 @@ public class Game implements Runnable {
         gameWin = new GameWin(this);
     }
 
-    private void createDefaultLevel() {
+    public static void createDefaultLevel() {
         //Уровень, состоящий только из травы
         int[] arr = new int[400];
         for (int i = 0; i < arr.length; i++)
             arr[i] = 0;
+        for (int i = 220; i < 240; i++)
+            arr[i] = 2;
 
         LoadSave.CreateLevel(arr);
     }
@@ -88,8 +91,7 @@ public class Game implements Runnable {
     public static void main(String[] args) {
         Game game = new Game();
         game.gameScreen.initInputs();
-        if (!GraphicsEnvironment.isHeadless())
-            game.start();
+        game.start();
     }
 
     @Override

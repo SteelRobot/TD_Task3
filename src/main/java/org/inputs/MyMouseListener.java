@@ -62,11 +62,8 @@ public class MyMouseListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        switch (GameStates.gameState) {
-
-            case PLAYING -> game.getPlaying().mouseDragged(e.getX(), e.getY());
-            case MENU -> game.getMenu().mouseDragged(e.getX(), e.getY());
-            case EDIT -> game.getEditor().mouseDragged(e.getX(), e.getY());
+        if (GameStates.gameState == GameStates.EDIT) {
+            game.getEditor().mouseDragged(e.getX(), e.getY());
         }
 
     }

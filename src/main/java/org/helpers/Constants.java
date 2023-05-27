@@ -1,7 +1,7 @@
 package org.helpers;
 
 
-import static org.main.langTexts.*;
+import static org.main.LangTexts.*;
 
 public class Constants {
 

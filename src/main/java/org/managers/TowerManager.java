@@ -54,13 +54,9 @@ public class TowerManager {
     private void attackEnemyIfClose(Tower t) {
         //Проверяет, есть ли враги в радиуса, и равен ли cooldown нулю, тогда стреляет
         for (Enemy e : playing.getEnemyManager().getEnemies()) {
-            if (e.isAlive()) {
-                if (isEnemyInRange(t, e)) {
-                    if (t.isCooldownOver()) {
-                        playing.shootEnemy(t, e);
-                        t.getResetCooldown();
-                    }
-                }
+            if (e.isAlive() && isEnemyInRange(t, e) && t.isCooldownOver()) {
+                playing.shootEnemy(t, e);
+                t.getResetCooldown();
             }
         }
     }
@@ -77,8 +73,7 @@ public class TowerManager {
             if (t.getSide()) {
                 //Для отзеркаливания спрайта по вертикали
                 g.drawImage(towerImgs[t.getTowerType()], t.getX() + 32, t.getY(), -32, 32, null);
-            }
-            else g.drawImage(towerImgs[t.getTowerType()], t.getX(), t.getY(), null);
+            } else g.drawImage(towerImgs[t.getTowerType()], t.getX(), t.getY(), null);
         }
     }
 
@@ -96,6 +91,7 @@ public class TowerManager {
     }
 
     public void reset() {
+        //Очищает список башен
         towers.clear();
         towerAmount = 0;
     }

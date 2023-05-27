@@ -22,7 +22,7 @@ import static org.main.GameStates.SetGameState;
 
 public class Playing extends GameScene implements SceneMethods {
 
-    private static final int GOLD_TICK_TIMER = 3; //Секунды
+    private static final int GOLD_TICK_TIMER = 3; //Сколько секунд нужно, чтобы получить 1 доп. валюту
     private int[][] lvl;
     private ActionBar actionBar;
     private int mouseX, mouseY;
@@ -44,7 +44,6 @@ public class Playing extends GameScene implements SceneMethods {
         gamePaused = false;
 
         actionBar = new ActionBar(0, 640, 640, 160, this);
-
         enemyManager = new EnemyManager(this, start, end);
         towerManager = new TowerManager(this);
         projectileManager = new ProjectileManager(this);
@@ -58,8 +57,10 @@ public class Playing extends GameScene implements SceneMethods {
         end = points.get(1);
     }
 
-    public void setLevel(int[][] lvl) {
+    public void setLevel(int[][] lvl, PathPoint start, PathPoint end) {
         this.lvl = lvl;
+        this.start = start;
+        this.end = end;
     }
 
     public void update() {
@@ -84,9 +85,8 @@ public class Playing extends GameScene implements SceneMethods {
                 }
             }
 
-            if (isTimeForNewEnemy()) {
+            if (isTimeForNewEnemy())
                 spawnEnemy();
-            }
 
             enemyManager.update();
             towerManager.update();
@@ -150,7 +150,7 @@ public class Playing extends GameScene implements SceneMethods {
     }
 
     private void drawLevel(Graphics g) {
-        for (int y = 0; y < lvl.length; y++) {
+        for (int y = 0; y < lvl.length; y++)
             for (int x = 0; x < lvl[y].length; x++) {
                 int id = lvl[y][x];
                 if (isAnimation(id)) {
@@ -159,20 +159,6 @@ public class Playing extends GameScene implements SceneMethods {
                     g.drawImage(getSprite(id), x * 32, y * 32, null);
                 }
             }
-        }
-    }
-
-    public int getTileType(int x, int y) {
-        int xCord = x / 32;
-        int yCord = y / 32;
-
-        if (xCord < 0 || xCord > 19)
-            return 0;
-        if (yCord < 0 || yCord > 19)
-            return 0;
-
-        int id = lvl[y / 32][x / 32];
-        return getGame().getTileManager().getTile(id).getTileType();
     }
 
     private void removeGold(int towerType) {
@@ -259,11 +245,6 @@ public class Playing extends GameScene implements SceneMethods {
         actionBar.mouseReleased(x, y);
     }
 
-    @Override
-    public void mouseDragged(int x, int y) {
-
-    }
-
     public TowerManager getTowerManager() {
         return towerManager;
     }
@@ -283,6 +264,7 @@ public class Playing extends GameScene implements SceneMethods {
     public ActionBar getActionBar() {
         return actionBar;
     }
+
     public ProjectileManager getProjectileManager() {
         return projectileManager;
     }

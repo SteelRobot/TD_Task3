@@ -1,24 +1,28 @@
 package org.helpers;
 
+import org.main.IncorrectLevelStructure;
 import org.objects.PathPoint;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import static org.helpers.Constants.Direction.*;
 import static org.helpers.Constants.Tiles.*;
+import static org.main.LangTexts.lvlWarningStr;
 
 public class Utils {
 
-    public static int[][] GetRoadDirArr(int[][] lvltypeArr, PathPoint start, PathPoint end) {
-        int[][] roadDirArr = new int[lvltypeArr.length][lvltypeArr[0].length];
+    public static int[][] GetRoadDirArr(int[][] lvlTypeArr, PathPoint start, PathPoint end) {
+        //Нужен, чтобы выстроить путь врагам ещё до того, как они появились
+        //Перед этим, каждый противник отдельно проверял направление их пути каждый вызов метода update(),
+        //что являлось затратным
+        int[][] roadDirArr = new int[lvlTypeArr.length][lvlTypeArr[0].length];
 
         PathPoint currTile = start;
         int lastDir = -1;
 
-        while (!isCurrSameAsEnd(currTile, end)) {
+        while (!isCurrTileSameAsEnd(currTile, end)) {
             PathPoint prevTile = currTile;
-            currTile = GetNextRoadTile(prevTile, lastDir, lvltypeArr);
+            currTile = GetNextRoadTile(prevTile, lastDir, lvlTypeArr);
             lastDir = GetDirFromPrevToCurr(prevTile, currTile);
 
             roadDirArr[prevTile.getyCord()][prevTile.getxCord()] = lastDir;
@@ -29,13 +33,14 @@ public class Utils {
     }
 
     private static int GetDirFromPrevToCurr(PathPoint prevTile, PathPoint currTile) {
+        //Сравнивает два тайла с помощью их координат, и возвращает направление от первого ко второму
         //Вверх/Вниз
         if (prevTile.getxCord() == currTile.getxCord()) {
             if (prevTile.getyCord() > currTile.getyCord())
                 return UP;
             else return DOWN;
         } else {
-        //Вправо/Влево
+            //Вправо/Влево
             if (prevTile.getxCord() > currTile.getxCord())
                 return LEFT;
             else return RIGHT;
@@ -43,13 +48,25 @@ public class Utils {
     }
 
     private static PathPoint GetNextRoadTile(PathPoint prevTile, int lastDir, int[][] lvltypeArr) {
+        //Проходит по всем (кроме противоположного текущему направлению), пока не найдёт тайл с дорогой
+        //А если не найдёт (начало не соединено с концом), то выкидывает ошибку, которая в итоге пересоздаст уровень
         int testDir = lastDir;
-        PathPoint testTile = GeTileInDir(prevTile, testDir, lastDir);
+        int counterCheck = 0;
+        PathPoint testTile = GetTileInDir(prevTile, testDir, lastDir);
 
         while (!IsTileRoad(testTile, lvltypeArr)) {
             testDir++;
             testDir %= 4;
-            testTile = GeTileInDir(prevTile, testDir, lastDir);
+            testTile = GetTileInDir(prevTile, testDir, lastDir);
+
+            counterCheck++;
+
+            if (counterCheck > 4) {
+                //Если были проверены все направления и дорогу так и не удалось найти
+                //То выкидывает ошибку и пересоздаёт уровень
+                LoadSave.ResetLevel();
+                throw new IncorrectLevelStructure(lvlWarningStr.toString());
+            }
         }
 
         return testTile;
@@ -63,7 +80,8 @@ public class Utils {
         return false;
     }
 
-    private static PathPoint GeTileInDir(PathPoint prevTile, int testDir, int lastDir) {
+    private static PathPoint GetTileInDir(PathPoint prevTile, int testDir, int lastDir) {
+        //Проходит по всем (кроме противоположного текущему направлению), и возвращает следующий тайл по направлению
         switch (testDir) {
             case LEFT -> {
                 if (lastDir != RIGHT) return new PathPoint(prevTile.getxCord() - 1, prevTile.getyCord());
@@ -81,10 +99,10 @@ public class Utils {
         return null;
     }
 
-    private static boolean isCurrSameAsEnd(PathPoint currTile, PathPoint end) {
+    private static boolean isCurrTileSameAsEnd(PathPoint currTile, PathPoint end) {
+        //Проверяет, является ли текущая клетка конечной
         if (currTile.getxCord() == end.getxCord())
-            if (currTile.getyCord() == end.getyCord())
-                return true;
+            return currTile.getyCord() == end.getyCord();
         return false;
     }
 

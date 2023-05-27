@@ -11,9 +11,10 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
 import static org.main.GameStates.*;
-import static org.main.langTexts.*;
+import static org.main.LangTexts.*;
 
 public class ActionBar extends Bar {
+    private static final int TIER_LIMIT = 3;
     private MyButton bMenu;
     private Playing playing;
     private MyButton[] towerButtons;
@@ -183,7 +184,6 @@ public class ActionBar extends Bar {
     }
 
     public BufferedImage getSelectedTowerBorder() {
-        //Загружает штуку для выделения выбранной башни, выглядит криво если честно
         BufferedImage atlas = LoadSave.getSpriteAtlas();
         return atlas.getSubimage(9 * 32, 2 * 32, 32, 32);
     }
@@ -210,7 +210,7 @@ public class ActionBar extends Bar {
             drawButtonFeedback(g, bSellTower);
 
             //Улучшение
-            if (displayedTower.getTier() < 3 && gold >= getUpgradeAmount(displayedTower)) {
+            if (displayedTower.getTier() < TIER_LIMIT && gold >= getUpgradeAmount(displayedTower)) {
                 bUpgradeTower.draw(g);
                 drawButtonFeedback(g, bUpgradeTower);
             }
@@ -235,12 +235,11 @@ public class ActionBar extends Bar {
     }
 
     private void drawDisplayedTowerBorder(Graphics g) {
-        //Рисует вон ту картинку выделения башни
         g.drawImage(selectedTowerBorder, displayedTower.getX(), displayedTower.getY(), null);
     }
 
     private void drawDisplayedTowerRange(Graphics g) {
-        //Рисует окружность радиуса башни, с поддержкой прозрачности!
+        //Рисует окружность радиуса башни
         g.setColor(Color.WHITE);
         g.drawOval(displayedTower.getX() + 16 - (int) (displayedTower.getRange() * 2) / 2,
                 displayedTower.getY() + 16 - (int) (displayedTower.getRange() * 2) / 2,
@@ -293,7 +292,7 @@ public class ActionBar extends Bar {
                 if (bSellTower.getBounds().contains(x, y)) {
                     sellTowerClicked();
                     return;
-                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3) {
+                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < TIER_LIMIT) {
                     upgradeTowerClicked();
                     return;
                 }
@@ -328,7 +327,7 @@ public class ActionBar extends Bar {
                 if (bSellTower.getBounds().contains(x, y)) {
                     bSellTower.setMouseOver(true);
                     return;
-                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3) {
+                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < TIER_LIMIT) {
                     bUpgradeTower.setMouseOver(true);
                     return;
                 }
@@ -355,7 +354,7 @@ public class ActionBar extends Bar {
                 if (bSellTower.getBounds().contains(x, y)) {
                     bSellTower.setMousePressed(true);
                     return;
-                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < 3) {
+                } else if (bUpgradeTower.getBounds().contains(x, y) && displayedTower.getTier() < TIER_LIMIT) {
                     bUpgradeTower.setMousePressed(true);
                     return;
                 }

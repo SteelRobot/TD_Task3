@@ -37,6 +37,7 @@ public class Editing extends GameScene implements SceneMethods {
         start = points.get(0);
         end = points.get(1);
         getGame().getPlaying().getEnemyManager().setStartAndEndPoints(start, end);
+        getGame().getPlaying().setLevel(lvl, start, end);
     }
 
     public void update() {
@@ -85,7 +86,10 @@ public class Editing extends GameScene implements SceneMethods {
     public void saveLevel() {
         //При нажатии кнопки сохранения уровень сохраняется
         LoadSave.SaveLevel(lvl, start, end);
-        getGame().getPlaying().setLevel(lvl);
+        getGame().getPlaying().setLevel(lvl, start, end);
+        getGame().getPlaying().resetAll();
+        getGame().getPlaying().getEnemyManager().loadRoadDirArr();
+        loadDefaultLevel();
     }
 
     public void setSelectedTile(Tile tile) {
@@ -152,9 +156,8 @@ public class Editing extends GameScene implements SceneMethods {
         toolBar.mouseReleased(x, y);
     }
 
-    @Override
     public void mouseDragged(int x, int y) {
-        if (y < 640) {
+        if (y > 0 && y < 640 && x > 0 && x < 640) {
             changeTile(x, y);
         }
     }
@@ -165,5 +168,7 @@ public class Editing extends GameScene implements SceneMethods {
         }
     }
 
-    public ToolBar getToolBar() {return toolBar;}
+    public ToolBar getToolBar() {
+        return toolBar;
+    }
 }
